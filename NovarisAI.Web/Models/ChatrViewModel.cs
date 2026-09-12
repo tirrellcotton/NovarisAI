@@ -1,0 +1,14 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace NovarisAI.Web.Models;
+
+/// <summary>
+/// Represents the view model for the Chat page, containing the prompt and response.
+/// </summary>
+public class ChatViewModel
+{
+    [Required]
+    [Display(Name="Ask Qwen")]
+    public string Prompt { get; set; } = string.Empty;
+    public string? Response { get; set; }
+}
