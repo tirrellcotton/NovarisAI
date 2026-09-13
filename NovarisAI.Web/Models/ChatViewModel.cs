@@ -8,7 +8,7 @@ namespace NovarisAI.Web.Models;
 public class ChatViewModel
 {
     [Required]
-    [Display(Name="Ask Qwen")]
+    [Display(Name="Ask Novaris AI")]
     public string Prompt { get; set; } = string.Empty;
     public string? Response { get; set; }
 }
