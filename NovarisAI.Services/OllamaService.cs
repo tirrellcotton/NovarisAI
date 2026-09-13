@@ -1,9 +1,10 @@
 ﻿using System.Net.Http.Json;
 using Microsoft.Extensions.Options;
-using NovarisAI.Web.Configuration;
-using NovarisAI.Web.Models;
+using NovarisAI.Core.Configuration;
+using NovarisAI.Core.Models;
+using NovarisAI.Core.Interfaces;
 
-namespace NovarisAI.Web.Services;
+namespace NovarisAI.Services;
 
 /// <summary>
 /// Represents a service for interacting with the Ollama chat API.

@@ -4,6 +4,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NovarisAI.Web", "NovarisAI.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{19DA4717-F823-4331-A9FD-1F50C24FFB27}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NovarisAI.Core", "NovarisAI.Core\NovarisAI.Core.csproj", "{FBAC9818-FBCF-45AF-9FFD-601255A7108F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NovarisAI.Services", "NovarisAI.Services\NovarisAI.Services.csproj", "{D3B1AE5A-AD8B-47D0-9063-A151A8FBB718}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,5 +18,13 @@ Global
 		{26DBA4B8-4594-484F-848E-223439022B07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26DBA4B8-4594-484F-848E-223439022B07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26DBA4B8-4594-484F-848E-223439022B07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBAC9818-FBCF-45AF-9FFD-601255A7108F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBAC9818-FBCF-45AF-9FFD-601255A7108F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBAC9818-FBCF-45AF-9FFD-601255A7108F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBAC9818-FBCF-45AF-9FFD-601255A7108F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3B1AE5A-AD8B-47D0-9063-A151A8FBB718}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3B1AE5A-AD8B-47D0-9063-A151A8FBB718}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3B1AE5A-AD8B-47D0-9063-A151A8FBB718}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3B1AE5A-AD8B-47D0-9063-A151A8FBB718}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

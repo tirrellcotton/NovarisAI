@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NovarisAI.Core.Interfaces;
 using NovarisAI.Web.Models;
-using NovarisAI.Web.Services;
+using NovarisAI.Services;
 
 namespace NovarisAI.Web.Controllers;
 

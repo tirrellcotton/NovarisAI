@@ -1,4 +1,4 @@
-﻿namespace NovarisAI.Web.Services;
+﻿namespace NovarisAI.Core.Interfaces;
 
 public interface IOllamaService
 {

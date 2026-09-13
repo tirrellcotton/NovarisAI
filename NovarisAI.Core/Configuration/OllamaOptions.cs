@@ -1,4 +1,4 @@
-﻿namespace NovarisAI.Web.Configuration;
+﻿namespace NovarisAI.Core.Configuration;
 
 public sealed class OllamaOptions
 {
