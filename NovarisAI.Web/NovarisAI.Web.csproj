@@ -6,4 +6,13 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\NovarisAI.Core\NovarisAI.Core.csproj" />
+      <ProjectReference Include="..\NovarisAI.Services\NovarisAI.Services.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Chat\Index.cshtml" />
+    </ItemGroup>
+
 </Project>

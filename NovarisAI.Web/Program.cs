@@ -1,5 +1,6 @@
-using NovarisAI.Web.Configuration;
-using NovarisAI.Web.Services;
+using NovarisAI.Core.Configuration;
+using NovarisAI.Core.Interfaces;
+using NovarisAI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
