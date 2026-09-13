@@ -1,4 +1,4 @@
-﻿namespace NovarisAI.Web.Models;
+﻿namespace NovarisAI.Core.Models;
 
 /// <summary>
 /// Represents a message in an Ollama chat request.
