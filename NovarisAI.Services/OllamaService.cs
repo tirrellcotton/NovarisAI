@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NovarisAI.Core.Configuration;
 using NovarisAI.Core.Models;
@@ -11,7 +12,8 @@ namespace NovarisAI.Services;
 /// </summary>
 /// <param name="httpClient">The HTTP client used to communicate with the Ollama chat API.</param>
 public sealed class OllamaService(HttpClient httpClient,
-    IOptions<OllamaOptions> options) : IOllamaService
+    IOptions<OllamaOptions> options,
+    ILogger<OllamaService> logger) : IOllamaService
 {
     /// <summary>
     /// Asks a question to the Ollama chat API and returns the response.
@@ -70,7 +72,14 @@ public sealed class OllamaService(HttpClient httpClient,
             request,
             cancellationToken);
 
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            logger.LogError(
+                "Ollama returned status code {StatusCode}",
+                response.StatusCode);
+
+            response.EnsureSuccessStatusCode();
+        }
 
         var result =
             await response.Content.ReadFromJsonAsync<OllamaChatResponse>(
