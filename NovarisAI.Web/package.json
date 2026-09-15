@@ -1,0 +1,11 @@
+{
+  "name": "novarisai-web",
+  "private": true,
+  "scripts": {
+    "build:client": "tsc --project tsconfig.json",
+    "typecheck": "tsc --project tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}
