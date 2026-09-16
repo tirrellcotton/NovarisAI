@@ -5,21 +5,6 @@
 }
 
 <section class="chat-shell">
-    <div class="chat-shell__hero">
-        <span class="chat-shell__eyebrow">StyleKit refresh</span>
-        <h1 class="chat__title">A cleaner workspace for local AI-assisted coding.</h1>
-
-        <p class="chat__subtitle">
-            Prompt Novaris AI, compare responses, and switch between Light, Dark, and Blue modes for the setup that fits your flow.
-        </p>
-
-        <ul class="chat-shell__highlights" aria-label="Application highlights">
-            <li class="chat-shell__highlight">Focused prompt workspace</li>
-            <li class="chat-shell__highlight">Readable response surface</li>
-            <li class="chat-shell__highlight">Three persistent color modes</li>
-        </ul>
-    </div>
-
     <div class="chat-shell__workspace">
         <section class="chat__panel" aria-labelledby="prompt-heading">
             <div class="chat__panel-header">
@@ -33,7 +18,8 @@
             <form asp-action="Index"
                   asp-controller="Home"
                   method="post"
-                  class="chat__form">
+                  class="chat__form"
+                  data-chat-request-form>
 
                 <div asp-validation-summary="ModelOnly"
                      class="chat__validation chat__validation--summary">
@@ -52,9 +38,12 @@
                     </span>
                 </div>
 
-                <button type="submit"
-                        class="chat__submit">
-                    Ask Novaris AI
+                <button type="submit" class="chat__submit" data-chat-submit>
+                    <span class="chat__submit-label">Ask Novaris AI</span>
+                    <span class="chat__submit-status" aria-live="polite" hidden>
+                        <span class="chat__spinner" aria-hidden="true"></span>
+                        Sending request
+                    </span>
                 </button>
             </form>
         </section>

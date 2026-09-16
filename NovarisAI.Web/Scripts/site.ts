@@ -16,6 +16,7 @@ applyStoredTheme();
 
 whenDocumentReady(() => {
     initializeThemeToggle();
+    initializeChatRequestState();
 });
 
 function initializeThemeToggle(): void {
@@ -45,6 +46,41 @@ function initializeThemeToggle(): void {
             storeTheme(requestedTheme);
         });
     }
+}
+
+function initializeChatRequestState(): void {
+    const form = document.querySelector<HTMLFormElement>("[data-chat-request-form]");
+    const submitButton = form?.querySelector<HTMLButtonElement>("[data-chat-submit]");
+    const submitStatus = submitButton?.querySelector<HTMLElement>(".chat__submit-status");
+
+    if (form === null || form === undefined || submitButton === null || submitButton === undefined || submitStatus === null || submitStatus === undefined) {
+        return;
+    }
+
+    const resetRequestState = (): void => {
+        form.removeAttribute("aria-busy");
+        submitButton.disabled = false;
+        submitButton.classList.remove("chat__submit--loading");
+        submitStatus.hidden = true;
+    };
+
+    form.addEventListener("submit", (event) => {
+        if (!form.checkValidity()) {
+            return;
+        }
+
+        if (submitButton.disabled) {
+            event.preventDefault();
+            return;
+        }
+
+        form.setAttribute("aria-busy", "true");
+        submitButton.disabled = true;
+        submitButton.classList.add("chat__submit--loading");
+        submitStatus.hidden = false;
+    });
+
+    window.addEventListener("pageshow", resetRequestState);
 }
 
 function applyStoredTheme(): void {
