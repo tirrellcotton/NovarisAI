@@ -1,46 +1,202 @@
-html {
-  font-size: 14px;
+:root {
+  --color-bg: #f7f8fc;
+  --color-panel: #ffffff;
+  --color-panel-border: #d9dfeb;
+  --color-heading: #112246;
+  --color-text: #2f3a52;
+  --color-muted: #586786;
+  --color-accent: #1265a8;
+  --color-accent-hover: #0f548b;
+  --color-danger: #b42332;
+  --shadow-panel: 0 1.1rem 2.5rem rgba(28, 45, 84, 0.08);
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
+html,
+body {
+  margin: 0;
   min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+  color: var(--color-text);
+  font: 400 1rem/1.55 "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+.site {
+  background:
+    radial-gradient(55rem 35rem at top right, rgba(26, 122, 206, 0.13), transparent 72%),
+    radial-gradient(42rem 22rem at top left, rgba(17, 34, 70, 0.09), transparent 78%),
+    var(--color-bg);
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+.site__header {
+  border-bottom: 1px solid var(--color-panel-border);
+  background-color: rgba(255, 255, 255, 0.93);
+  backdrop-filter: blur(4px);
 }
 
-.response-box {
+.site-nav__inner {
+  width: min(72rem, 100% - 2rem);
+  margin: 0 auto;
+  padding: 1rem 0;
+}
+
+.site-nav__brand {
+  color: var(--color-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+
+.site-nav__brand:hover,
+.site-nav__brand:focus-visible {
+  color: var(--color-accent);
+}
+
+.site__content {
+  width: min(72rem, 100% - 2rem);
+  margin: 0 auto;
+}
+
+.site__main {
+  padding: 1.5rem 0 3rem;
+}
+
+.chat__inner {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.chat__title {
+  margin: 0 0 0.75rem;
+  color: var(--color-heading);
+  font-size: clamp(1.85rem, 2.6vw, 2.35rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.chat__subtitle {
+  margin: 0 0 1.35rem;
+  color: var(--color-muted);
+}
+
+.chat__form {
+  display: grid;
+  gap: 1rem;
+}
+
+.chat__field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.chat__textarea {
+  width: 100%;
+  min-height: 14rem;
+  padding: 0.95rem 1.05rem;
+  border: 1px solid var(--color-panel-border);
+  border-radius: 0.8rem;
+  background-color: var(--color-panel);
+  color: var(--color-text);
+  font: 400 0.98rem/1.5 "Consolas", "Courier New", monospace;
+  resize: vertical;
+}
+
+.chat__textarea:focus-visible {
+  border-color: var(--color-accent);
+  outline: 3px solid rgba(18, 101, 168, 0.22);
+  outline-offset: 1px;
+}
+
+.chat__submit {
+  justify-self: start;
+  padding: 0.7rem 1.2rem;
+  border: 0;
+  border-radius: 999px;
+  background-color: var(--color-accent);
+  color: #ffffff;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.chat__submit:hover,
+.chat__submit:focus-visible {
+  background-color: var(--color-accent-hover);
+}
+
+.chat__validation {
+  color: var(--color-danger);
+}
+
+.chat__validation--summary ul {
+  margin: 0 0 0.2rem 1.2rem;
+  padding: 0;
+}
+
+.chat__divider {
+  margin: 2rem 0 1rem;
+  border: 0;
+  border-top: 1px solid var(--color-panel-border);
+}
+
+.chat__response-title {
+  margin: 0 0 0.8rem;
+  color: var(--color-heading);
+  font-size: 1.25rem;
+}
+
+.chat__response-box {
+  margin: 0;
   white-space: pre-wrap;
   word-wrap: break-word;
-  background: #f5f5f5;
-  border: 1px solid #ddd;
-  border-radius: 0.5rem;
-  padding: 1rem;
+  border: 1px solid var(--color-panel-border);
+  border-radius: 0.8rem;
+  background-color: var(--color-panel);
+  box-shadow: var(--shadow-panel);
+  padding: 1.05rem;
   max-height: 40rem;
   overflow-y: auto;
 }
 
-textarea {
-  font-family: Consolas, "Courier New", monospace;
+.error-page {
+  max-width: 52rem;
+}
+
+.error-page__title,
+.error-page__subtitle {
+  margin: 0 0 0.8rem;
+}
+
+.error-page__title--danger,
+.error-page__subtitle--danger {
+  color: var(--color-danger);
+}
+
+.error-page__meta,
+.error-page__text {
+  margin: 0 0 0.95rem;
+}
+
+.error-page__heading {
+  margin: 1.25rem 0 0.8rem;
+  color: var(--color-heading);
+}
+
+@media (max-width: 640px) {
+  .site__main {
+    padding-top: 1rem;
+  }
+
+  .chat__submit {
+    width: 100%;
+    justify-self: stretch;
+  }
 }
