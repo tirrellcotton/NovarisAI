@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var supportedThemes = new[] { "light", "dark", "blue" };
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -6,11 +9,16 @@
     <title>@ViewData["Title"] - Novaris AI</title>
     <script type="importmap"></script>
     <script>
+        window.novarisThemes = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(supportedThemes));
+
         (() => {
             try {
                 const theme = window.localStorage.getItem("novaris-theme");
+                const supportedThemes = Array.isArray(window.novarisThemes)
+                    ? window.novarisThemes
+                    : [];
 
-                if (theme === "light" || theme === "dark" || theme === "blue") {
+                if (supportedThemes.includes(theme)) {
                     document.documentElement.dataset.theme = theme;
                 }
             } catch {
@@ -29,15 +37,13 @@
             </div>
 
             <div class="theme-toggle" role="group" aria-label="Color theme">
-                <button type="button" class="theme-toggle__button" data-theme-option="light" aria-pressed="false">
-                    Light
-                </button>
-                <button type="button" class="theme-toggle__button" data-theme-option="dark" aria-pressed="false">
-                    Dark
-                </button>
-                <button type="button" class="theme-toggle__button" data-theme-option="blue" aria-pressed="false">
-                    Blue
-                </button>
+                @foreach (var theme in supportedThemes)
+                {
+                    var themeLabel = char.ToUpperInvariant(theme[0]) + theme[1..];
+                    <button type="button" class="theme-toggle__button" data-theme-option="@theme" aria-pressed="false">
+                        @themeLabel
+                    </button>
+                }
             </div>
         </div>
     </nav>

@@ -1,6 +1,7 @@
 import { whenDocumentReady } from "./modules/dom.js";
 const themeStorageKey = "novaris-theme";
-const supportedThemes = ["light", "dark", "blue"];
+const fallbackTheme = "light";
+const supportedThemes = readSupportedThemes();
 applyStoredTheme();
 whenDocumentReady(() => {
     initializeThemeToggle();
@@ -13,7 +14,7 @@ function initializeThemeToggle() {
     }
     const activeTheme = isThemeName(root.dataset.theme)
         ? root.dataset.theme
-        : readStoredTheme() ?? "light";
+        : readStoredTheme() ?? fallbackTheme;
     applyTheme(activeTheme, root, themeButtons);
     for (const button of themeButtons) {
         button.addEventListener("click", () => {
@@ -55,6 +56,11 @@ function storeTheme(theme) {
     }
     catch {
     }
+}
+function readSupportedThemes() {
+    return Array.isArray(window.novarisThemes) && window.novarisThemes.length > 0
+        ? window.novarisThemes
+        : [fallbackTheme];
 }
 function isThemeName(value) {
     return value !== null

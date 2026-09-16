@@ -1,9 +1,16 @@
 import { whenDocumentReady } from "./modules/dom.js";
 
-type ThemeName = "light" | "dark" | "blue";
+type ThemeName = string;
+
+declare global {
+    interface Window {
+        novarisThemes?: string[];
+    }
+}
 
 const themeStorageKey = "novaris-theme";
-const supportedThemes: ThemeName[] = ["light", "dark", "blue"];
+const fallbackTheme = "light";
+const supportedThemes = readSupportedThemes();
 
 applyStoredTheme();
 
@@ -22,7 +29,7 @@ function initializeThemeToggle(): void {
 
     const activeTheme = isThemeName(root.dataset.theme)
         ? root.dataset.theme
-        : readStoredTheme() ?? "light";
+        : readStoredTheme() ?? fallbackTheme;
 
     applyTheme(activeTheme, root, themeButtons);
 
@@ -77,8 +84,14 @@ function storeTheme(theme: ThemeName): void {
     }
 }
 
+function readSupportedThemes(): ThemeName[] {
+    return Array.isArray(window.novarisThemes) && window.novarisThemes.length > 0
+        ? window.novarisThemes
+        : [fallbackTheme];
+}
+
 function isThemeName(value: string | undefined | null): value is ThemeName {
     return value !== null
         && value !== undefined
-        && supportedThemes.includes(value as ThemeName);
+        && supportedThemes.includes(value);
 }

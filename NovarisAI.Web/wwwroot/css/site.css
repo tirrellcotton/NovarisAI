@@ -6,6 +6,7 @@
   --color-panel: rgba(255, 255, 255, 0.9);
   --color-panel-strong: #ffffff;
   --color-panel-border: rgba(114, 132, 171, 0.24);
+  --color-header: rgba(255, 255, 255, 0.84);
   --color-heading: #112246;
   --color-text: #2f3a52;
   --color-muted: #586786;
@@ -26,6 +27,7 @@ html[data-theme="dark"] {
   --color-panel: rgba(9, 19, 37, 0.88);
   --color-panel-strong: #101b30;
   --color-panel-border: rgba(129, 154, 219, 0.24);
+  --color-header: rgba(16, 27, 48, 0.84);
   --color-heading: #f4f7ff;
   --color-text: #d5def0;
   --color-muted: #9eacc8;
@@ -46,6 +48,7 @@ html[data-theme="blue"] {
   --color-panel: rgba(241, 247, 255, 0.92);
   --color-panel-strong: #f8fbff;
   --color-panel-border: rgba(66, 112, 194, 0.24);
+  --color-header: rgba(248, 251, 255, 0.84);
   --color-heading: #0e2a5c;
   --color-text: #1f4074;
   --color-muted: #5270a3;
@@ -85,8 +88,7 @@ body {
 
 .site__header {
   border-bottom: 1px solid var(--color-panel-border);
-  background-color: var(--color-panel-strong);
-  background-color: color-mix(in srgb, var(--color-panel-strong) 84%, transparent);
+  background-color: var(--color-header);
   backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
