@@ -85,6 +85,7 @@ body {
 
 .site__header {
   border-bottom: 1px solid var(--color-panel-border);
+  background-color: var(--color-panel-strong);
   background-color: color-mix(in srgb, var(--color-panel-strong) 84%, transparent);
   backdrop-filter: blur(12px);
   position: sticky;
@@ -220,6 +221,9 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .chat-shell__highlight {
