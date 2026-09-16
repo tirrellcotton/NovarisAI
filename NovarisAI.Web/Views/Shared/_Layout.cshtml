@@ -11,7 +11,22 @@
 <header class="site__header">
     <nav class="site-nav">
         <div class="site-nav__inner">
-            <a class="site-nav__brand" asp-area="" asp-controller="Home" asp-action="Index">Novaris AI</a>
+            <div class="site-nav__branding">
+                <a class="site-nav__brand" asp-area="" asp-controller="Home" asp-action="Index">Novaris AI</a>
+                <p class="site-nav__tagline">Local coding assistant for fast iteration.</p>
+            </div>
+
+            <div class="theme-toggle" role="group" aria-label="Color theme">
+                <button type="button" class="theme-toggle__button" data-theme-option="light" aria-pressed="false">
+                    Light
+                </button>
+                <button type="button" class="theme-toggle__button" data-theme-option="dark" aria-pressed="false">
+                    Dark
+                </button>
+                <button type="button" class="theme-toggle__button" data-theme-option="blue" aria-pressed="false">
+                    Blue
+                </button>
+            </div>
         </div>
     </nav>
 </header>

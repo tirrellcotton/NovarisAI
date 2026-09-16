@@ -1,14 +1,61 @@
 :root {
-  --color-bg: #f7f8fc;
-  --color-panel: #ffffff;
-  --color-panel-border: #d9dfeb;
+  color-scheme: light;
+  --color-bg: #f3f6fc;
+  --color-bg-accent: rgba(69, 123, 255, 0.12);
+  --color-bg-secondary: rgba(17, 34, 70, 0.08);
+  --color-panel: rgba(255, 255, 255, 0.9);
+  --color-panel-strong: #ffffff;
+  --color-panel-border: rgba(114, 132, 171, 0.24);
   --color-heading: #112246;
   --color-text: #2f3a52;
   --color-muted: #586786;
-  --color-accent: #1265a8;
-  --color-accent-hover: #0f548b;
+  --color-accent: #315efb;
+  --color-accent-hover: #294fd1;
+  --color-accent-soft: rgba(49, 94, 251, 0.12);
   --color-danger: #b42332;
-  --shadow-panel: 0 1.1rem 2.5rem rgba(28, 45, 84, 0.08);
+  --color-chip: rgba(255, 255, 255, 0.72);
+  --shadow-panel: 0 1.35rem 3.5rem rgba(28, 45, 84, 0.12);
+  --shadow-soft: 0 0.9rem 2rem rgba(28, 45, 84, 0.08);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #09111f;
+  --color-bg-accent: rgba(87, 142, 255, 0.22);
+  --color-bg-secondary: rgba(108, 134, 195, 0.18);
+  --color-panel: rgba(9, 19, 37, 0.88);
+  --color-panel-strong: #101b30;
+  --color-panel-border: rgba(129, 154, 219, 0.24);
+  --color-heading: #f4f7ff;
+  --color-text: #d5def0;
+  --color-muted: #9eacc8;
+  --color-accent: #7aa2ff;
+  --color-accent-hover: #9ab8ff;
+  --color-accent-soft: rgba(122, 162, 255, 0.2);
+  --color-danger: #ff98a2;
+  --color-chip: rgba(17, 28, 52, 0.92);
+  --shadow-panel: 0 1.5rem 3.5rem rgba(0, 0, 0, 0.34);
+  --shadow-soft: 0 1rem 2rem rgba(0, 0, 0, 0.22);
+}
+
+html[data-theme="blue"] {
+  color-scheme: light;
+  --color-bg: #eef5ff;
+  --color-bg-accent: rgba(38, 115, 255, 0.18);
+  --color-bg-secondary: rgba(20, 73, 166, 0.1);
+  --color-panel: rgba(241, 247, 255, 0.92);
+  --color-panel-strong: #f8fbff;
+  --color-panel-border: rgba(66, 112, 194, 0.24);
+  --color-heading: #0e2a5c;
+  --color-text: #1f4074;
+  --color-muted: #5270a3;
+  --color-accent: #1b6dff;
+  --color-accent-hover: #1253c4;
+  --color-accent-soft: rgba(27, 109, 255, 0.12);
+  --color-danger: #b42332;
+  --color-chip: rgba(255, 255, 255, 0.76);
+  --shadow-panel: 0 1.4rem 3.5rem rgba(36, 88, 180, 0.14);
+  --shadow-soft: 0 1rem 2rem rgba(36, 88, 180, 0.1);
 }
 
 *,
@@ -26,25 +73,38 @@ body {
 body {
   color: var(--color-text);
   font: 400 1rem/1.55 "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 .site {
   background:
-    radial-gradient(55rem 35rem at top right, rgba(26, 122, 206, 0.13), transparent 72%),
-    radial-gradient(42rem 22rem at top left, rgba(17, 34, 70, 0.09), transparent 78%),
+    radial-gradient(55rem 35rem at top right, var(--color-bg-accent), transparent 72%),
+    radial-gradient(42rem 22rem at top left, var(--color-bg-secondary), transparent 78%),
     var(--color-bg);
 }
 
 .site__header {
   border-bottom: 1px solid var(--color-panel-border);
-  background-color: rgba(255, 255, 255, 0.93);
-  backdrop-filter: blur(4px);
+  background-color: color-mix(in srgb, var(--color-panel-strong) 84%, transparent);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .site-nav__inner {
   width: min(72rem, 100% - 2rem);
   margin: 0 auto;
   padding: 1rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.site-nav__branding {
+  display: grid;
+  gap: 0.2rem;
 }
 
 .site-nav__brand {
@@ -60,18 +120,86 @@ body {
   color: var(--color-accent);
 }
 
+.site-nav__tagline {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.35rem;
+  border: 1px solid var(--color-panel-border);
+  border-radius: 999px;
+  background: var(--color-chip);
+  box-shadow: var(--shadow-soft);
+}
+
+.theme-toggle__button {
+  padding: 0.45rem 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-muted);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.theme-toggle__button:hover,
+.theme-toggle__button:focus-visible {
+  color: var(--color-heading);
+  outline: none;
+}
+
+.theme-toggle__button:focus-visible {
+  box-shadow: 0 0 0 3px var(--color-accent-soft);
+}
+
+.theme-toggle__button--active {
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
 .site__content {
   width: min(72rem, 100% - 2rem);
   margin: 0 auto;
 }
 
 .site__main {
-  padding: 1.5rem 0 3rem;
+  padding: 2rem 0 3.5rem;
 }
 
-.chat__inner {
-  max-width: 64rem;
-  margin: 0 auto;
+.chat-shell {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.chat-shell__hero,
+.chat__panel {
+  border: 1px solid var(--color-panel-border);
+  border-radius: 1.5rem;
+  background: var(--color-panel);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(14px);
+}
+
+.chat-shell__hero {
+  padding: clamp(1.5rem, 3vw, 2.75rem);
+}
+
+.chat-shell__eyebrow,
+.chat__panel-kicker {
+  display: inline-block;
+  margin: 0 0 0.85rem;
+  color: var(--color-accent);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .chat__title {
@@ -85,6 +213,55 @@ body {
 .chat__subtitle {
   margin: 0 0 1.35rem;
   color: var(--color-muted);
+  max-width: 52rem;
+}
+
+.chat-shell__highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.chat-shell__highlight {
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--color-panel-border);
+  border-radius: 999px;
+  background: var(--color-chip);
+  color: var(--color-heading);
+  font-weight: 600;
+}
+
+.chat-shell__workspace {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.chat__panel {
+  padding: 1.4rem;
+}
+
+.chat__panel--response {
+  padding-bottom: 1.2rem;
+}
+
+.chat__panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.chat__panel-title {
+  margin: 0;
+  color: var(--color-heading);
+  font-size: 1.3rem;
+}
+
+.chat__panel-copy {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.95rem;
 }
 
 .chat__form {
@@ -97,21 +274,27 @@ body {
   gap: 0.5rem;
 }
 
+.chat__label {
+  color: var(--color-heading);
+  font-weight: 700;
+}
+
 .chat__textarea {
   width: 100%;
   min-height: 14rem;
   padding: 0.95rem 1.05rem;
   border: 1px solid var(--color-panel-border);
   border-radius: 0.8rem;
-  background-color: var(--color-panel);
+  background-color: var(--color-panel-strong);
   color: var(--color-text);
   font: 400 0.98rem/1.5 "Consolas", "Courier New", monospace;
   resize: vertical;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .chat__textarea:focus-visible {
   border-color: var(--color-accent);
-  outline: 3px solid rgba(18, 101, 168, 0.22);
+  outline: 3px solid var(--color-accent-soft);
   outline-offset: 1px;
 }
 
@@ -125,11 +308,14 @@ body {
   font-weight: 700;
   line-height: 1.2;
   cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
 .chat__submit:hover,
 .chat__submit:focus-visible {
   background-color: var(--color-accent-hover);
+  transform: translateY(-1px);
 }
 
 .chat__validation {
@@ -141,26 +327,13 @@ body {
   padding: 0;
 }
 
-.chat__divider {
-  margin: 2rem 0 1rem;
-  border: 0;
-  border-top: 1px solid var(--color-panel-border);
-}
-
-.chat__response-title {
-  margin: 0 0 0.8rem;
-  color: var(--color-heading);
-  font-size: 1.25rem;
-}
-
 .chat__response-box {
   margin: 0;
   white-space: pre-wrap;
   word-wrap: break-word;
   border: 1px solid var(--color-panel-border);
   border-radius: 0.8rem;
-  background-color: var(--color-panel);
-  box-shadow: var(--shadow-panel);
+  background-color: var(--color-panel-strong);
   padding: 1.05rem;
   max-height: 40rem;
   overflow-y: auto;
@@ -191,6 +364,21 @@ body {
 }
 
 @media (max-width: 640px) {
+  .site-nav__inner,
+  .chat__panel-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .theme-toggle {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .theme-toggle__button {
+    flex: 1 1 0;
+  }
+
   .site__main {
     padding-top: 1rem;
   }

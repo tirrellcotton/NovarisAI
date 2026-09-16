@@ -4,46 +4,73 @@
     ViewData["Title"] = "Novaris AI";
 }
 
-<section class="chat">
-    <div class="chat__inner">
-        <h1 class="chat__title">Novaris AI</h1>
+<section class="chat-shell">
+    <div class="chat-shell__hero">
+        <span class="chat-shell__eyebrow">StyleKit refresh</span>
+        <h1 class="chat__title">A cleaner workspace for local AI-assisted coding.</h1>
 
         <p class="chat__subtitle">
-            Local coding assistant powered by Qwen2.5-Coder 7B.
+            Prompt Novaris AI, compare responses, and switch between Light, Dark, and Blue modes for the setup that fits your flow.
         </p>
 
-        <form asp-action="Index"
-              asp-controller="Home"
-              method="post"
-              class="chat__form">
+        <div class="chat-shell__highlights" aria-label="Application highlights">
+            <div class="chat-shell__highlight">Focused prompt workspace</div>
+            <div class="chat-shell__highlight">Readable response surface</div>
+            <div class="chat-shell__highlight">Three persistent color modes</div>
+        </div>
+    </div>
 
-            <div asp-validation-summary="ModelOnly"
-                 class="chat__validation chat__validation--summary">
+    <div class="chat-shell__workspace">
+        <section class="chat__panel" aria-labelledby="prompt-heading">
+            <div class="chat__panel-header">
+                <div>
+                    <p class="chat__panel-kicker">Prompt</p>
+                    <h2 id="prompt-heading" class="chat__panel-title">Ask Novaris AI</h2>
+                </div>
+                <p class="chat__panel-copy">Powered by Qwen2.5-Coder 7B.</p>
             </div>
 
-            <div class="chat__field">
-                <textarea asp-for="Prompt"
-                          class="chat__textarea"
-                          rows="8"
-                          placeholder="Ask a programming question...">
-                </textarea>
+            <form asp-action="Index"
+                  asp-controller="Home"
+                  method="post"
+                  class="chat__form">
 
-                <span asp-validation-for="Prompt"
-                      class="chat__validation chat__validation--field">
-                </span>
-            </div>
+                <div asp-validation-summary="ModelOnly"
+                     class="chat__validation chat__validation--summary">
+                </div>
 
-            <button type="submit"
-                    class="chat__submit">
-                Ask Novaris AI
-            </button>
-        </form>
+                <div class="chat__field">
+                    <label asp-for="Prompt" class="chat__label"></label>
+                    <textarea asp-for="Prompt"
+                              class="chat__textarea"
+                              rows="8"
+                              placeholder="Ask a programming question, request a refactor, or describe a bug...">
+                    </textarea>
+
+                    <span asp-validation-for="Prompt"
+                          class="chat__validation chat__validation--field">
+                    </span>
+                </div>
+
+                <button type="submit"
+                        class="chat__submit">
+                    Ask Novaris AI
+                </button>
+            </form>
+        </section>
 
         @if (!string.IsNullOrWhiteSpace(Model.Response))
         {
-            <hr class="chat__divider" />
-            <h2 class="chat__response-title">Response</h2>
-            <pre class="chat__response-box"><code>@Model.Response</code></pre>
+            <section class="chat__panel chat__panel--response" aria-labelledby="response-heading">
+                <div class="chat__panel-header">
+                    <div>
+                        <p class="chat__panel-kicker">Response</p>
+                        <h2 id="response-heading" class="chat__panel-title">Latest output</h2>
+                    </div>
+                </div>
+
+                <pre class="chat__response-box"><code>@Model.Response</code></pre>
+            </section>
         }
     </div>
 </section>
