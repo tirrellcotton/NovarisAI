@@ -5,6 +5,8 @@ type ThemeName = "light" | "dark" | "blue";
 const themeStorageKey = "novaris-theme";
 const supportedThemes: ThemeName[] = ["light", "dark", "blue"];
 
+applyStoredTheme();
+
 whenDocumentReady(() => {
     initializeThemeToggle();
 });
@@ -18,8 +20,11 @@ function initializeThemeToggle(): void {
         return;
     }
 
-    const storedTheme = readStoredTheme();
-    applyTheme(storedTheme ?? "light", root, themeButtons);
+    const activeTheme = isThemeName(root.dataset.theme)
+        ? root.dataset.theme
+        : readStoredTheme() ?? "light";
+
+    applyTheme(activeTheme, root, themeButtons);
 
     for (const button of themeButtons) {
         button.addEventListener("click", () => {
@@ -32,6 +37,14 @@ function initializeThemeToggle(): void {
             applyTheme(requestedTheme, root, themeButtons);
             storeTheme(requestedTheme);
         });
+    }
+}
+
+function applyStoredTheme(): void {
+    const storedTheme = readStoredTheme();
+
+    if (storedTheme !== null) {
+        document.documentElement.dataset.theme = storedTheme;
     }
 }
 
