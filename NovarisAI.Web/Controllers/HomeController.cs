@@ -51,6 +51,59 @@ public class HomeController(IOllamaService ollamaService) : Controller
         return View(model);
     }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task Stream(ChatViewModel model, CancellationToken cancellationToken)
+    {
+        if (!ModelState.IsValid)
+        {
+            Response.StatusCode = StatusCodes.Status400BadRequest;
+            await Response.WriteAsync("Enter a prompt before sending the request.", cancellationToken);
+            return;
+        }
+
+        Response.ContentType = "text/plain; charset=utf-8";
+        Response.Headers.CacheControl = "no-cache";
+
+        try
+        {
+            await foreach (var chunk in ollamaService.AskStreamAsync(model.Prompt, cancellationToken))
+            {
+                await Response.WriteAsync(chunk, cancellationToken);
+                await Response.Body.FlushAsync(cancellationToken);
+            }
+        }
+        catch (TaskCanceledException) when (!HttpContext.RequestAborted.IsCancellationRequested)
+        {
+            if (!Response.HasStarted)
+            {
+                Response.StatusCode = StatusCodes.Status504GatewayTimeout;
+            }
+
+            await Response.WriteAsync("The request was canceled or timed out.", CancellationToken.None);
+        }
+        catch (HttpRequestException ex)
+        {
+            if (!Response.HasStarted)
+            {
+                Response.StatusCode = StatusCodes.Status502BadGateway;
+            }
+
+            await Response.WriteAsync(
+                $"Unable to communicate with Ollama: {ex.Message}",
+                CancellationToken.None);
+        }
+        catch (Exception)
+        {
+            if (!Response.HasStarted)
+            {
+                Response.StatusCode = StatusCodes.Status500InternalServerError;
+            }
+
+            await Response.WriteAsync("An unexpected error occurred.", CancellationToken.None);
+        }
+    }
+
     public IActionResult Privacy()
     {
         return View();

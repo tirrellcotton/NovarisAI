@@ -19,7 +19,8 @@
                   asp-controller="Home"
                   method="post"
                   class="chat__form"
-                  data-chat-request-form>
+                  data-chat-request-form
+                  data-stream-url="@Url.Action("Stream", "Home")">
 
                 <div asp-validation-summary="ModelOnly"
                      class="chat__validation chat__validation--summary">
@@ -48,18 +49,18 @@
             </form>
         </section>
 
-        @if (!string.IsNullOrWhiteSpace(Model.Response))
-        {
-            <section class="chat__panel chat__panel--response" aria-labelledby="response-heading">
-                <div class="chat__panel-header">
-                    <div>
-                        <p class="chat__panel-kicker">Response</p>
-                        <h2 id="response-heading" class="chat__panel-title">Latest output</h2>
-                    </div>
+        <section class="chat__panel chat__panel--response"
+                 aria-labelledby="response-heading"
+                 data-chat-response
+                 @(string.IsNullOrWhiteSpace(Model.Response) ? "hidden" : "")>
+            <div class="chat__panel-header">
+                <div>
+                    <p class="chat__panel-kicker">Response</p>
+                    <h2 id="response-heading" class="chat__panel-title">Latest output</h2>
                 </div>
+            </div>
 
-                <pre class="chat__response-box"><code>@Model.Response</code></pre>
-            </section>
-        }
+            <pre class="chat__response-box"><code data-chat-response-content>@Model.Response</code></pre>
+        </section>
     </div>
 </section>
