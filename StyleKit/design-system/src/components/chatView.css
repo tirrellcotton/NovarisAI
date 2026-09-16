@@ -1,0 +1,120 @@
+@import url('../tokens/variables.css');
+
+.work {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    background: var(--surface-base);
+    margin-bottom: var(--space-4);
+    overflow: hidden;
+}
+
+.worksum {
+    align-items: center;
+    gap: var(--space-2);
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-muted);
+    border: 1px solid var(--color-muted);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    text-align: left;
+    display: flex;
+}
+
+.worksum:hover {
+    color: var(--text-secondary);
+}
+
+.tw {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    flex: 1;
+}
+
+.arrow {
+    font-size: var(--text-micro);
+    color: var(--text-faint);
+    transition: transform var(--dur-base) var(--ease);
+}
+
+.work.open .arrow {
+    transform: rotate(90deg);
+}
+
+.worksteps {
+    padding: 0 var(--space-3) var(--space-2);
+}
+
+.wstep-row {
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-2) 0;
+    border-top: 1px solid var(--border);
+    font-size: var(--text-xs);
+    text-align: left;
+    display: flex;
+}
+
+.wstep:first-child .wstep-row {
+    border-top: none;
+}
+
+.src {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    color: var(--text-faint);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: none;
+    width: 96px;
+    overflow: hidden;
+}
+
+.act {
+    color: var(--text-secondary);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+    overflow: hidden;
+}
+
+.res {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    color: var(--text-muted);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: none;
+    max-width: 40%;
+    overflow: hidden;
+}
+
+.wstep.warn .res {
+    color: var(--state-attention);
+}
+
+.ms {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    color: var(--text-faint);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    flex: none;
+    width: 44px;
+}
+
+.wstep-detail {
+    margin: 0 0 var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-secondary);
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: #ffffff08;
+    max-height: 220px;
+    overflow-y: auto;
+}
