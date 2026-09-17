@@ -53,14 +53,18 @@ function initializeChatRequestState(): void {
     const submitButton = form?.querySelector<HTMLButtonElement>("[data-chat-submit]");
     const submitStatus = submitButton?.querySelector<HTMLElement>(".chat__submit-status");
     const responsePanel = document.querySelector<HTMLElement>("[data-chat-response]");
-    const responseContent = responsePanel?.querySelector<HTMLElement>("[data-chat-response-content]");
+    const history = responsePanel?.querySelector<HTMLElement>("[data-chat-history]");
     const validationSummary = form?.querySelector<HTMLElement>("[data-valmsg-summary]");
+    const conversationId = form?.querySelector<HTMLInputElement>("[data-chat-conversation-id]");
+    const prompt = form?.querySelector<HTMLTextAreaElement>("[name=Prompt]");
 
     if (form === null || form === undefined
         || submitButton === null || submitButton === undefined
         || submitStatus === null || submitStatus === undefined
         || responsePanel === null || responsePanel === undefined
-        || responseContent === null || responseContent === undefined) {
+        || history === null || history === undefined
+        || conversationId === null || conversationId === undefined
+        || prompt === null || prompt === undefined) {
         return;
     }
 
@@ -94,6 +98,37 @@ function initializeChatRequestState(): void {
         validationSummary.classList.remove("validation-summary-errors");
     };
 
+    const appendMessage = (role: "user" | "assistant", content: string): HTMLElement => {
+        const message = document.createElement("article");
+        const roleLabel = document.createElement("p");
+        const responseBox = document.createElement("pre");
+        const responseContent = document.createElement("code");
+
+        message.className = `chat__message chat__message--${role}`;
+        roleLabel.className = "chat__message-role";
+        roleLabel.textContent = role;
+        responseBox.className = "chat__response-box";
+        responseContent.textContent = content;
+
+        responseBox.append(responseContent);
+        message.append(roleLabel, responseBox);
+        history.append(message);
+
+        return responseContent;
+    };
+
+    const updateConversationLocation = (id: string | null): void => {
+        if (id === null || id.length === 0) {
+            return;
+        }
+
+        conversationId.value = id;
+
+        const url = new URL(window.location.href);
+        url.searchParams.set("conversationId", id);
+        window.history.replaceState({}, "", url);
+    };
+
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
@@ -112,17 +147,22 @@ function initializeChatRequestState(): void {
         submitButton.classList.add("chat__submit--loading");
         submitStatus.hidden = false;
 
-        responseContent.textContent = "";
         responsePanel.hidden = false;
+        appendMessage("user", prompt.value);
+        const responseContent = appendMessage("assistant", "");
+        const requestBody = new FormData(form);
+        prompt.value = "";
 
         try {
             const response = await fetch(form.dataset.streamUrl ?? form.action, {
                 method: "POST",
-                body: new FormData(form),
+                body: requestBody,
                 headers: {
                     Accept: "text/plain"
                 }
             });
+
+            updateConversationLocation(response.headers.get("X-Conversation-Id"));
 
             if (!response.ok) {
                 const message = await response.text();
@@ -162,7 +202,7 @@ function initializeChatRequestState(): void {
             }
         } catch (error) {
             if (responseContent.textContent?.trim().length === 0) {
-                responsePanel.hidden = true;
+                responseContent.parentElement?.parentElement?.remove();
             }
 
             showError(error instanceof Error ? error.message : "Unable to complete the request.");

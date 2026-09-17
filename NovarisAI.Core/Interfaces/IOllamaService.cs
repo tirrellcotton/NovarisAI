@@ -2,9 +2,11 @@
 
 public interface IOllamaService
 {
-    Task<string> AskAsync(string prompt, CancellationToken cancellationToken = default);
+    Task<string> AskAsync(
+        IReadOnlyCollection<NovarisAI.Core.Models.OllamaMessage> messages,
+        CancellationToken cancellationToken = default);
 
     IAsyncEnumerable<string> AskStreamAsync(
-        string prompt,
+        IReadOnlyCollection<NovarisAI.Core.Models.OllamaMessage> messages,
         CancellationToken cancellationToken = default);
 }
