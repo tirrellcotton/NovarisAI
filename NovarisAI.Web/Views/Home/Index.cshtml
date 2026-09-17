@@ -13,7 +13,7 @@
                     <p class="chat__panel-kicker">Prompt</p>
                     <h2 id="prompt-heading" class="chat__panel-title">Ask Novaris AI</h2>
                 </div>
-                <p class="chat__panel-copy">Powered by Qwen2.5-Coder 7B.</p>
+                <p class="chat__panel-copy">Choose the model and assistant mode for this request.</p>
             </div>
 
             <form asp-action="Index"
@@ -28,6 +28,43 @@
 
                 <div asp-validation-summary="ModelOnly"
                      class="chat__validation chat__validation--summary">
+                </div>
+
+                <div class="chat__settings" aria-label="Request settings">
+                    <div class="chat__field">
+                        <label asp-for="SelectedModel" class="chat__label"></label>
+                        <select asp-for="SelectedModel" class="chat__select">
+                            @foreach (var option in ChatModelOptions.All)
+                            {
+                                <option value="@option.Value">@option.Label</option>
+                            }
+                        </select>
+                        <span asp-validation-for="SelectedModel"
+                              class="chat__validation chat__validation--field">
+                        </span>
+                    </div>
+
+                    <div class="chat__field">
+                        <label asp-for="PromptPreset" class="chat__label"></label>
+                        <select asp-for="PromptPreset" class="chat__select">
+                            @foreach (var preset in Enum.GetValues<NovarisAI.Core.Models.PromptPreset>())
+                            {
+                                var label = preset switch
+                                {
+                                    NovarisAI.Core.Models.PromptPreset.CSharpDeveloper => "C# Developer",
+                                    NovarisAI.Core.Models.PromptPreset.CodeReview => "Code Review",
+                                    NovarisAI.Core.Models.PromptPreset.UnitTests => "Unit Tests",
+                                    NovarisAI.Core.Models.PromptPreset.SoftwareArchitecture => "Software Architecture",
+                                    _ => preset.ToString()
+                                };
+
+                                <option value="@preset">@label</option>
+                            }
+                        </select>
+                        <span asp-validation-for="PromptPreset"
+                              class="chat__validation chat__validation--field">
+                        </span>
+                    </div>
                 </div>
 
                 <div class="chat__field">
