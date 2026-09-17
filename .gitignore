@@ -419,6 +419,9 @@ FodyWeavers.xsd
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 
+# Novaris local conversation storage
+NovarisAI.Web/Data/*.db*
+
 # Local History for Visual Studio Code
 .history/
 

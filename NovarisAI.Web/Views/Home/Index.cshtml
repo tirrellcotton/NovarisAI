@@ -22,6 +22,8 @@
                   data-chat-request-form
                   data-stream-url="@Url.Action("Stream", "Home")">
 
+                <input asp-for="ConversationId" type="hidden" data-chat-conversation-id />
+
                 <div asp-validation-summary="ModelOnly"
                      class="chat__validation chat__validation--summary">
                 </div>
@@ -52,15 +54,23 @@
         <section class="chat__panel chat__panel--response"
                  aria-labelledby="response-heading"
                  data-chat-response
-                 @(string.IsNullOrWhiteSpace(Model.Response) ? "hidden" : "")>
+                 @(Model.Messages.Count == 0 ? "hidden" : "")>
             <div class="chat__panel-header">
                 <div>
-                    <p class="chat__panel-kicker">Response</p>
-                    <h2 id="response-heading" class="chat__panel-title">Latest output</h2>
+                    <p class="chat__panel-kicker">Conversation</p>
+                    <h2 id="response-heading" class="chat__panel-title">Conversation history</h2>
                 </div>
             </div>
 
-            <pre class="chat__response-box"><code data-chat-response-content>@Model.Response</code></pre>
+            <div class="chat__history" data-chat-history>
+                @foreach (var message in Model.Messages)
+                {
+                    <article class="chat__message chat__message--@message.Role">
+                        <p class="chat__message-role">@message.Role</p>
+                        <pre class="chat__response-box"><code>@message.Content</code></pre>
+                    </article>
+                }
+            </div>
         </section>
     </div>
 </section>

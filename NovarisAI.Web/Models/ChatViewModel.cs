@@ -7,8 +7,11 @@ namespace NovarisAI.Web.Models;
 /// </summary>
 public class ChatViewModel
 {
+    public int? ConversationId { get; set; }
+
     [Required]
     [Display(Name="Ask Novaris AI")]
     public string Prompt { get; set; } = string.Empty;
-    public string? Response { get; set; }
+
+    public List<ChatMessageViewModel> Messages { get; set; } = [];
 }

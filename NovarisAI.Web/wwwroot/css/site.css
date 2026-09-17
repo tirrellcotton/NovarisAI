@@ -372,6 +372,29 @@ textarea {
   word-break: break-word;
 }
 
+.chat__history {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.chat__message {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.chat__message-role {
+  margin: 0;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.chat__message--user .chat__response-box {
+  border-color: var(--brand-primary);
+}
+
 .error-page {
   max-width: 52rem;
   padding: var(--space-4);
