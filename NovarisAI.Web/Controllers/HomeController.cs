@@ -25,6 +25,8 @@ public class HomeController(
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Index(ChatViewModel model, CancellationToken cancellationToken)
     {
+        ValidateChatOptions(model);
+
         if (!ModelState.IsValid)
         {
             model.Messages = await GetMessagesAsync(model.ConversationId, cancellationToken);
@@ -40,6 +42,8 @@ public class HomeController(
 
             var response = await ollamaService.AskAsync(
                 ToOllamaMessages(conversation),
+                model.SelectedModel,
+                model.PromptPreset,
                 cancellationToken);
 
             await AddMessageAsync(conversation, "assistant", response, cancellationToken);
@@ -73,6 +77,8 @@ public class HomeController(
     [ValidateAntiForgeryToken]
     public async Task Stream(ChatViewModel model, CancellationToken cancellationToken)
     {
+        ValidateChatOptions(model);
+
         if (!ModelState.IsValid)
         {
             Response.StatusCode = StatusCodes.Status400BadRequest;
@@ -96,6 +102,8 @@ public class HomeController(
 
             await foreach (var chunk in ollamaService.AskStreamAsync(
                                ToOllamaMessages(conversation),
+                               model.SelectedModel,
+                               model.PromptPreset,
                                cancellationToken))
             {
                 response.Append(chunk);
@@ -149,6 +157,23 @@ public class HomeController(
     public IActionResult Privacy()
     {
         return View();
+    }
+
+    private void ValidateChatOptions(ChatViewModel model)
+    {
+        if (!ChatModelOptions.IsSupported(model.SelectedModel))
+        {
+            ModelState.AddModelError(
+                nameof(model.SelectedModel),
+                "Select a supported model.");
+        }
+
+        if (!Enum.IsDefined(model.PromptPreset))
+        {
+            ModelState.AddModelError(
+                nameof(model.PromptPreset),
+                "Select a supported assistant mode.");
+        }
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
