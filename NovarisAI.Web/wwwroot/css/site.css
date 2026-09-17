@@ -74,8 +74,9 @@ html[data-theme="dark"] {
 
 html,
 body {
-  min-height: 100%;
+  height: 100%;
   margin: 0;
+  overflow: hidden;
 }
 
 body {
@@ -95,7 +96,10 @@ select {
 }
 
 .site {
-  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100vh;
+  overflow: hidden;
 }
 
 .site__header {
@@ -108,10 +112,10 @@ select {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  width: min(1100px, calc(100% - 2rem));
+  width: 100%;
   min-height: 68px;
   margin: 0 auto;
-  padding: var(--space-3) 0;
+  padding: var(--space-3) var(--space-4);
 }
 
 .site-nav__branding {
@@ -182,18 +186,32 @@ select {
 }
 
 .site__content {
-  width: min(1100px, calc(100% - 2rem));
-  margin: 0 auto;
+  width: 100%;
+  min-height: 0;
+  padding: 0 var(--space-4);
 }
 
 .site__main {
-  padding: var(--space-5) 0;
+  height: 100%;
+  min-height: 0;
+  padding: var(--space-4) 0;
+  overflow: hidden;
 }
 
 .chat-shell,
 .chat-shell__workspace {
   display: grid;
   gap: var(--space-4);
+  min-height: 0;
+}
+
+.chat-shell {
+  height: 100%;
+}
+
+.chat-shell__workspace {
+  height: 100%;
+  grid-template-columns: minmax(20rem, 0.9fr) minmax(24rem, 1.1fr);
 }
 
 .chat__panel,
@@ -207,7 +225,11 @@ select {
 }
 
 .chat__panel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 0;
   padding: var(--space-4);
+  overflow: hidden;
   transition: background var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease);
 }
 
@@ -253,6 +275,17 @@ select {
   gap: var(--space-3);
 }
 
+.chat__form {
+  align-content: start;
+}
+
+.chat__form,
+.chat__history {
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: var(--space-1);
+}
+
 .chat__settings {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -292,7 +325,6 @@ select {
 
 .chat__select {
   width: 100%;
-  min-height: 2.5rem;
   padding: var(--space-2) var(--space-3);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -318,7 +350,6 @@ select {
   justify-content: center;
   justify-self: start;
   gap: var(--space-2);
-  min-height: 32px;
   min-width: 10.75rem;
   padding: var(--space-2) var(--space-4);
   border: 1px solid transparent;
@@ -403,7 +434,7 @@ select {
 }
 
 .chat__message-content {
-  padding: var(--space-3);
+  padding: var(--space-2);
   overflow-x: auto;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
@@ -436,8 +467,8 @@ select {
 }
 
 .markdown-content pre {
-  margin: var(--space-3) 0;
-  padding: var(--space-3);
+  margin: var(--space-2) 0;
+  padding: var(--space-2);
   overflow-x: auto;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-md);
@@ -484,12 +515,13 @@ select {
 
 .chat__history {
   display: grid;
-  gap: var(--space-4);
+  align-content: start;
+  gap: var(--space-3);
 }
 
 .chat__message {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--space-1);
 }
 
 .chat__message-role {
@@ -570,7 +602,43 @@ select {
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  html,
+  body,
+  .site {
+    height: auto;
+    overflow: visible;
+  }
+
+  .site {
+    min-height: 100vh;
+  }
+
+  .site__content {
+    padding: 0 var(--space-3);
+  }
+
+  .site__main,
+  .chat-shell,
+  .chat-shell__workspace,
+  .chat__panel {
+    height: auto;
+    overflow: visible;
+  }
+
+  .chat__form,
+  .chat__history {
+    overflow: visible;
+  }
+
+  .chat__panel {
+    display: block;
+  }
+
+  .chat-shell__workspace {
+    grid-template-columns: 1fr;
+  }
+
   .site-nav__inner,
   .chat__panel-header {
     align-items: stretch;
