@@ -5,8 +5,13 @@ const supportedThemes = readSupportedThemes();
 applyStoredTheme();
 whenDocumentReady(() => {
     initializeThemeToggle();
+    initializeSyntaxHighlighting();
     initializeChatRequestState();
 });
+window.addEventListener("novaris-highlight-ready", initializeSyntaxHighlighting);
+function initializeSyntaxHighlighting() {
+    highlightCodeBlocks(document);
+}
 function initializeThemeToggle() {
     const root = document.documentElement;
     const themeButtons = Array.from(document.querySelectorAll("[data-theme-option]"));
@@ -73,17 +78,44 @@ function initializeChatRequestState() {
     const appendMessage = (role, content) => {
         const message = document.createElement("article");
         const roleLabel = document.createElement("p");
-        const responseBox = document.createElement("pre");
-        const responseContent = document.createElement("code");
+        const messageContent = document.createElement("div");
         message.className = `chat__message chat__message--${role}`;
         roleLabel.className = "chat__message-role";
         roleLabel.textContent = role;
-        responseBox.className = "chat__response-box";
-        responseContent.textContent = content;
-        responseBox.append(responseContent);
-        message.append(roleLabel, responseBox);
+        messageContent.className = "chat__message-content markdown-content";
+        messageContent.textContent = content;
+        message.append(roleLabel, messageContent);
         history.append(message);
-        return responseContent;
+        return messageContent;
+    };
+    const renderMarkdown = async (messageContent, markdown) => {
+        const markdownUrl = form.dataset.markdownUrl;
+        if (markdownUrl === undefined) {
+            return;
+        }
+        const requestBody = new FormData();
+        const antiForgeryToken = form.querySelector("input[name=__RequestVerificationToken]");
+        requestBody.append("markdown", markdown);
+        if (antiForgeryToken !== null) {
+            requestBody.append(antiForgeryToken.name, antiForgeryToken.value);
+        }
+        try {
+            const response = await fetch(markdownUrl, {
+                method: "POST",
+                body: requestBody,
+                headers: {
+                    Accept: "text/html"
+                }
+            });
+            if (!response.ok) {
+                return;
+            }
+            messageContent.innerHTML = await response.text();
+            messageContent.classList.add("markdown-content--rendered");
+            highlightCodeBlocks(messageContent);
+        }
+        catch {
+        }
     };
     const updateConversationLocation = (id) => {
         if (id === null || id.length === 0) {
@@ -109,10 +141,12 @@ function initializeChatRequestState() {
         submitButton.classList.add("chat__submit--loading");
         submitStatus.hidden = false;
         responsePanel.hidden = false;
-        appendMessage("user", prompt.value);
+        const promptContent = prompt.value;
+        const userMessageContent = appendMessage("user", promptContent);
         const responseContent = appendMessage("assistant", "");
         const requestBody = new FormData(form);
         prompt.value = "";
+        void renderMarkdown(userMessageContent, promptContent);
         try {
             const response = await fetch(form.dataset.streamUrl ?? form.action, {
                 method: "POST",
@@ -149,6 +183,7 @@ function initializeChatRequestState() {
             if (!hasReceivedContent && finalChunk.length > 0) {
                 markResponseStarted();
             }
+            await renderMarkdown(responseContent, responseContent.textContent ?? "");
         }
         catch (error) {
             if (responseContent.textContent?.trim().length === 0) {
@@ -161,6 +196,16 @@ function initializeChatRequestState() {
         }
     });
     window.addEventListener("pageshow", resetRequestState);
+}
+function highlightCodeBlocks(container) {
+    if (window.hljs === undefined) {
+        return;
+    }
+    for (const codeBlock of container.querySelectorAll("pre code")) {
+        if (!codeBlock.classList.contains("hljs")) {
+            window.hljs.highlightElement(codeBlock);
+        }
+    }
 }
 function applyStoredTheme() {
     const storedTheme = readStoredTheme();

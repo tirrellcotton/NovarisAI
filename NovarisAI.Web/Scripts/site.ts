@@ -5,6 +5,9 @@ type ThemeName = string;
 declare global {
     interface Window {
         novarisThemes?: string[];
+        hljs?: {
+            highlightElement: (element: HTMLElement) => void;
+        };
     }
 }
 
@@ -16,8 +19,15 @@ applyStoredTheme();
 
 whenDocumentReady(() => {
     initializeThemeToggle();
+    initializeSyntaxHighlighting();
     initializeChatRequestState();
 });
+
+window.addEventListener("novaris-highlight-ready", initializeSyntaxHighlighting);
+
+function initializeSyntaxHighlighting(): void {
+    highlightCodeBlocks(document);
+}
 
 function initializeThemeToggle(): void {
     const root = document.documentElement;
@@ -101,20 +111,55 @@ function initializeChatRequestState(): void {
     const appendMessage = (role: "user" | "assistant", content: string): HTMLElement => {
         const message = document.createElement("article");
         const roleLabel = document.createElement("p");
-        const responseBox = document.createElement("pre");
-        const responseContent = document.createElement("code");
+        const messageContent = document.createElement("div");
 
         message.className = `chat__message chat__message--${role}`;
         roleLabel.className = "chat__message-role";
         roleLabel.textContent = role;
-        responseBox.className = "chat__response-box";
-        responseContent.textContent = content;
+        messageContent.className = "chat__message-content markdown-content";
+        messageContent.textContent = content;
 
-        responseBox.append(responseContent);
-        message.append(roleLabel, responseBox);
+        message.append(roleLabel, messageContent);
         history.append(message);
 
-        return responseContent;
+        return messageContent;
+    };
+
+    const renderMarkdown = async (messageContent: HTMLElement, markdown: string): Promise<void> => {
+        const markdownUrl = form.dataset.markdownUrl;
+
+        if (markdownUrl === undefined) {
+            return;
+        }
+
+        const requestBody = new FormData();
+        const antiForgeryToken = form.querySelector<HTMLInputElement>(
+            "input[name=__RequestVerificationToken]");
+
+        requestBody.append("markdown", markdown);
+
+        if (antiForgeryToken !== null) {
+            requestBody.append(antiForgeryToken.name, antiForgeryToken.value);
+        }
+
+        try {
+            const response = await fetch(markdownUrl, {
+                method: "POST",
+                body: requestBody,
+                headers: {
+                    Accept: "text/html"
+                }
+            });
+
+            if (!response.ok) {
+                return;
+            }
+
+            messageContent.innerHTML = await response.text();
+            messageContent.classList.add("markdown-content--rendered");
+            highlightCodeBlocks(messageContent);
+        } catch {
+        }
     };
 
     const updateConversationLocation = (id: string | null): void => {
@@ -148,10 +193,13 @@ function initializeChatRequestState(): void {
         submitStatus.hidden = false;
 
         responsePanel.hidden = false;
-        appendMessage("user", prompt.value);
+        const promptContent = prompt.value;
+        const userMessageContent = appendMessage("user", promptContent);
         const responseContent = appendMessage("assistant", "");
         const requestBody = new FormData(form);
         prompt.value = "";
+
+        void renderMarkdown(userMessageContent, promptContent);
 
         try {
             const response = await fetch(form.dataset.streamUrl ?? form.action, {
@@ -200,6 +248,8 @@ function initializeChatRequestState(): void {
             if (!hasReceivedContent && finalChunk.length > 0) {
                 markResponseStarted();
             }
+
+            await renderMarkdown(responseContent, responseContent.textContent ?? "");
         } catch (error) {
             if (responseContent.textContent?.trim().length === 0) {
                 responseContent.parentElement?.parentElement?.remove();
@@ -212,6 +262,18 @@ function initializeChatRequestState(): void {
     });
 
     window.addEventListener("pageshow", resetRequestState);
+}
+
+function highlightCodeBlocks(container: ParentNode): void {
+    if (window.hljs === undefined) {
+        return;
+    }
+
+    for (const codeBlock of container.querySelectorAll<HTMLElement>("pre code")) {
+        if (!codeBlock.classList.contains("hljs")) {
+            window.hljs.highlightElement(codeBlock);
+        }
+    }
 }
 
 function applyStoredTheme(): void {
