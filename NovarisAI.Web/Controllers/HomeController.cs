@@ -6,12 +6,14 @@ using NovarisAI.Core.Interfaces;
 using NovarisAI.Core.Models;
 using NovarisAI.Web.Data;
 using NovarisAI.Web.Models;
+using NovarisAI.Web.Services;
 
 namespace NovarisAI.Web.Controllers;
 
 public class HomeController(
     IOllamaService ollamaService,
-    NovarisDbContext database) : Controller
+    NovarisDbContext database,
+    IMarkdownRenderer markdownRenderer) : Controller
 {
     [HttpGet]
     public async Task<IActionResult> Index(int? conversationId, CancellationToken cancellationToken)
@@ -135,6 +137,13 @@ public class HomeController(
 
             await Response.WriteAsync("An unexpected error occurred.", CancellationToken.None);
         }
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ContentResult RenderMarkdown([FromForm] string markdown)
+    {
+        return Content(markdownRenderer.Render(markdown), "text/html");
     }
 
     public IActionResult Privacy()

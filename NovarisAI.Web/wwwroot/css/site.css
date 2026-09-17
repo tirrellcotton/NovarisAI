@@ -372,6 +372,86 @@ textarea {
   word-break: break-word;
 }
 
+.chat__message-content {
+  padding: var(--space-3);
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.markdown-content--rendered {
+  white-space: normal;
+}
+
+.markdown-content > :first-child {
+  margin-top: 0;
+}
+
+.markdown-content > :last-child {
+  margin-bottom: 0;
+}
+
+.markdown-content :not(pre) > code {
+  padding: 0.1em 0.3em;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised-hi);
+  font-family: var(--font-mono);
+}
+
+.markdown-content pre {
+  margin: var(--space-3) 0;
+  padding: var(--space-3);
+  overflow-x: auto;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: #151922;
+  color: #e6edf3;
+}
+
+.markdown-content pre code {
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  white-space: pre;
+}
+
+.markdown-content .hljs-keyword,
+.markdown-content .hljs-selector-tag,
+.markdown-content .hljs-literal {
+  color: #ff9dce;
+}
+
+.markdown-content .hljs-title,
+.markdown-content .hljs-title.function_,
+.markdown-content .hljs-params {
+  color: #9cc9ff;
+}
+
+.markdown-content .hljs-string,
+.markdown-content .hljs-attr,
+.markdown-content .hljs-template-variable {
+  color: #b8e994;
+}
+
+.markdown-content .hljs-number,
+.markdown-content .hljs-built_in,
+.markdown-content .hljs-variable {
+  color: #ffd580;
+}
+
+.markdown-content .hljs-comment {
+  color: #8b949e;
+}
+
 .chat__history {
   display: grid;
   gap: var(--space-4);
@@ -392,6 +472,10 @@ textarea {
 }
 
 .chat__message--user .chat__response-box {
+  border-color: var(--brand-primary);
+}
+
+.chat__message--user .chat__message-content {
   border-color: var(--brand-primary);
 }
 
