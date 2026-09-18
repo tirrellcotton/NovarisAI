@@ -1,6 +1,9 @@
+using Microsoft.EntityFrameworkCore;
 using NovarisAI.Core.Configuration;
 using NovarisAI.Core.Interfaces;
 using NovarisAI.Services;
+using NovarisAI.Web.Data;
+using NovarisAI.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,9 +15,16 @@ builder.Services.AddHttpClient<IOllamaService, OllamaService>(client =>
 });
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<IMarkdownRenderer, MarkdownRenderer>();
 
 builder.Services.Configure<OllamaOptions>(
     builder.Configuration.GetSection(OllamaOptions.SectionName));
+
+var dataDirectory = Path.Combine(builder.Environment.ContentRootPath, "Data");
+Directory.CreateDirectory(dataDirectory);
+
+builder.Services.AddDbContext<NovarisDbContext>(options =>
+    options.UseSqlite($"Data Source={Path.Combine(dataDirectory, "novaris.db")}"));
 
 builder.Services.AddHttpClient<IOllamaService, OllamaService>((serviceProvider, client) =>
 {
@@ -31,6 +41,12 @@ builder.Services.AddHttpClient<IOllamaService, OllamaService>((serviceProvider, 
 
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var database = scope.ServiceProvider.GetRequiredService<NovarisDbContext>();
+    await database.Database.EnsureCreatedAsync();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

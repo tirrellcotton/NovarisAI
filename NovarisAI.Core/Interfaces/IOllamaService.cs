@@ -2,5 +2,15 @@
 
 public interface IOllamaService
 {
-    Task<string> AskAsync(string prompt, CancellationToken cancellationToken = default);
+    Task<string> AskAsync(
+        IReadOnlyCollection<NovarisAI.Core.Models.OllamaMessage> messages,
+        string model,
+        NovarisAI.Core.Models.PromptPreset promptPreset,
+        CancellationToken cancellationToken = default);
+
+    IAsyncEnumerable<string> AskStreamAsync(
+        IReadOnlyCollection<NovarisAI.Core.Models.OllamaMessage> messages,
+        string model,
+        NovarisAI.Core.Models.PromptPreset promptPreset,
+        CancellationToken cancellationToken = default);
 }

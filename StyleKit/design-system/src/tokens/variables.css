@@ -1,0 +1,87 @@
+:root {
+    --color-primary: #007bff;
+    --color-secondary: #6c757d;
+    --color-success: #28a745;
+    --color-danger: #dc3545;
+    --color-warning: #ffc107;
+    --color-info: #17a2b8;
+    --color-light: #f8f9fa;
+    --color-dark: #343a40;
+    --color-muted: #6c757d;
+    --color-white: #ffffff;
+    --color-black: #000000;
+
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 1rem;
+    --space-4: 1.5rem;
+    --space-5: 2rem;
+    --space-6: 2.5rem;
+    --space-7: 3rem;
+
+    --radius-sm: 0.2rem;
+    --radius-md: 0.25rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 1rem;
+    --radius-2xl: 1.5rem;
+    --radius-pill: 50rem;
+
+    --font-sans: 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: 'Courier New', Courier, monospace;
+
+    --text-display: 1.9375rem;
+    --text-heading: 1.1875rem;
+    --text-body: 0.875rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-sm: 0.78125rem;
+    --text-xs: 0.71875rem;
+    --text-micro: 0.65625rem;
+
+    --weight-regular: 400;
+    --weight-medium: 500;
+    --weight-semi: 600;
+
+    --text-primary: #171a1d;
+    --text-secondary: #3a424a;
+    --text-muted: #58616a;
+    --text-faint: #7c8792;
+    --text-on-fill: #ffffff;
+
+    --border: #c6cdd8;
+    --border-strong: #a4adba;
+
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.2);
+
+    --surface-base: var(--color-white);
+    --surface-raised: var(--color-light);
+    --surface-raised-hi: #e7ebf1;
+    --surface-canvas: var(--color-light);
+
+    --brand-primary: #315edb;
+    --brand-primary-hover: #2a53c3;
+    --brand-active: #274cae;
+    --state-positive: var(--color-success);
+    --state-attention: var(--color-warning);
+    --state-danger: var(--color-danger);
+    --state-live: var(--color-info);
+    --state-attention-wash: rgba(255, 193, 7, 0.16);
+    --brand-red: var(--color-danger);
+    --brand-red-wash: rgba(220, 53, 69, 0.1);
+    --brand-red-hover: rgba(220, 53, 69, 0.2);
+    --accent: #7c87c4;
+    --accent-wash: rgba(124, 135, 196, 0.15);
+
+    --dur-base: 0.3s;
+    --dur-fast: 0.2s;
+    --ease: ease-in-out;
+
+    --leading-normal: 1.55;
+    --leading-dense: 1.5;
+    --leading-snug: 1.4;
+    --tracking-title: 0.05em;
+    --tracking-label: 0.1em;
+
+    --hit-min: 32px;
+}

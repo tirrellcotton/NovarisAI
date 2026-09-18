@@ -1,0 +1,27 @@
+{
+  "name": "design-system",
+  "version": "1.0.0",
+  "description": "A shared design system package for consistent styling across applications.",
+  "main": "src/index.css",
+  "scripts": {
+    "build": "npm run build:css",
+    "build:css": "postcss src/index.css -o dist/design-system.css",
+    "watch": "npm run watch:css",
+    "watch:css": "postcss src/index.css -o dist/design-system.css --watch"
+  },
+  "dependencies": {
+    "postcss": "^8.0.0",
+    "autoprefixer": "^10.0.0"
+  },
+  "devDependencies": {
+    "postcss-cli": "^8.0.0"
+  },
+  "keywords": [
+    "design-system",
+    "css",
+    "styles",
+    "components"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

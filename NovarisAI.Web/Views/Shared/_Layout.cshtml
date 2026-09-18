@@ -1,17 +1,50 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var supportedThemes = new[] { "light", "dark" };
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - Novaris AI</title>
     <script type="importmap"></script>
+    <script>
+        window.novarisThemes = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(supportedThemes));
+
+        (() => {
+            try {
+                const theme = window.localStorage.getItem("novaris-theme");
+                const supportedThemes = Array.isArray(window.novarisThemes)
+                    ? window.novarisThemes
+                    : [];
+
+                if (supportedThemes.includes(theme)) {
+                    document.documentElement.dataset.theme = theme;
+                }
+            } catch {
+            }
+        })();
+    </script>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
 </head>
 <body class="site">
 <header class="site__header">
     <nav class="site-nav">
         <div class="site-nav__inner">
-            <a class="site-nav__brand" asp-area="" asp-controller="Home" asp-action="Index">Novaris AI</a>
+            <div class="site-nav__branding">
+                <a class="site-nav__brand" asp-area="" asp-controller="Home" asp-action="Index">Novaris AI</a>
+                <p class="site-nav__tagline">Local coding assistant for fast iteration.</p>
+            </div>
+
+            <div class="theme-toggle" role="group" aria-label="Color theme">
+                @foreach (var theme in supportedThemes)
+                {
+                    var themeLabel = char.ToUpperInvariant(theme[0]) + theme[1..];
+                    <button type="button" class="theme-toggle__button" data-theme-option="@theme" aria-pressed="false">
+                        @themeLabel
+                    </button>
+                }
+            </div>
         </div>
     </nav>
 </header>
@@ -22,6 +55,9 @@
 </div>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.12.0/highlight.min.js"
+        defer
+        onload="window.dispatchEvent(new Event('novaris-highlight-ready'))"></script>
 <script type="module" src="~/js/site.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", required: false)
 </body>

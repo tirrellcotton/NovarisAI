@@ -1,49 +1,117 @@
-﻿@model NovarisAI.Web.Models.ChatViewModel
+@model NovarisAI.Web.Models.ChatViewModel
+@inject NovarisAI.Web.Services.IMarkdownRenderer MarkdownRenderer
 
 @{
     ViewData["Title"] = "Novaris AI";
 }
 
-<section class="chat">
-    <div class="chat__inner">
-        <h1 class="chat__title">Novaris AI</h1>
-
-        <p class="chat__subtitle">
-            Local coding assistant powered by Qwen2.5-Coder 7B.
-        </p>
-
-        <form asp-action="Index"
-              asp-controller="Home"
-              method="post"
-              class="chat__form">
-
-            <div asp-validation-summary="ModelOnly"
-                 class="chat__validation chat__validation--summary">
+<section class="chat-shell">
+    <div class="chat-shell__workspace">
+        <section class="chat__panel" aria-labelledby="prompt-heading">
+            <div class="chat__panel-header">
+                <div>
+                    <p class="chat__panel-kicker">Prompt</p>
+                    <h2 id="prompt-heading" class="chat__panel-title">Ask Novaris AI</h2>
+                </div>
+                <p class="chat__panel-copy">Choose the model and assistant mode for this request.</p>
             </div>
 
-            <div class="chat__field">
-                <textarea asp-for="Prompt"
-                          class="chat__textarea"
-                          rows="8"
-                          placeholder="Ask a programming question...">
-                </textarea>
+            <form asp-action="Index"
+                  asp-controller="Home"
+                  method="post"
+                  class="chat__form"
+                  data-chat-request-form
+                  data-stream-url="@Url.Action("Stream", "Home")"
+                  data-markdown-url="@Url.Action("RenderMarkdown", "Home")">
 
-                <span asp-validation-for="Prompt"
-                      class="chat__validation chat__validation--field">
-                </span>
+                <input asp-for="ConversationId" type="hidden" data-chat-conversation-id />
+
+                <div asp-validation-summary="ModelOnly"
+                     class="chat__validation chat__validation--summary">
+                </div>
+
+                <div class="chat__settings" aria-label="Request settings">
+                    <div class="chat__field">
+                        <label asp-for="SelectedModel" class="chat__label"></label>
+                        <select asp-for="SelectedModel" class="chat__select">
+                            @foreach (var option in ChatModelOptions.All)
+                            {
+                                <option value="@option.Value">@option.Label</option>
+                            }
+                        </select>
+                        <span asp-validation-for="SelectedModel"
+                              class="chat__validation chat__validation--field">
+                        </span>
+                    </div>
+
+                    <div class="chat__field">
+                        <label asp-for="PromptPreset" class="chat__label"></label>
+                        <select asp-for="PromptPreset" class="chat__select">
+                            @foreach (var preset in Enum.GetValues<NovarisAI.Core.Models.PromptPreset>())
+                            {
+                                var label = preset switch
+                                {
+                                    NovarisAI.Core.Models.PromptPreset.CSharpDeveloper => "C# Developer",
+                                    NovarisAI.Core.Models.PromptPreset.CodeReview => "Code Review",
+                                    NovarisAI.Core.Models.PromptPreset.UnitTests => "Unit Tests",
+                                    NovarisAI.Core.Models.PromptPreset.SoftwareArchitecture => "Software Architecture",
+                                    _ => preset.ToString()
+                                };
+
+                                <option value="@preset">@label</option>
+                            }
+                        </select>
+                        <span asp-validation-for="PromptPreset"
+                              class="chat__validation chat__validation--field">
+                        </span>
+                    </div>
+                </div>
+
+                <div class="chat__field">
+                    <label asp-for="Prompt" class="chat__label"></label>
+                    <textarea asp-for="Prompt"
+                              class="chat__textarea"
+                              rows="8"
+                              placeholder="Ask a programming question, request a refactor, or describe a bug...">
+                    </textarea>
+
+                    <span asp-validation-for="Prompt"
+                          class="chat__validation chat__validation--field">
+                    </span>
+                </div>
+
+                <button type="submit" class="chat__submit" data-chat-submit>
+                    <span class="chat__submit-label">Ask Novaris AI</span>
+                    <span class="chat__submit-status" aria-live="polite" hidden>
+                        <span class="chat__spinner" aria-hidden="true"></span>
+                        Sending request
+                    </span>
+                </button>
+            </form>
+        </section>
+
+        <section class="chat__panel chat__panel--response"
+                 aria-labelledby="response-heading"
+                 data-chat-response
+                 @(Model.Messages.Count == 0 ? "hidden" : "")>
+            <div class="chat__panel-header">
+                <div>
+                    <p class="chat__panel-kicker">Conversation</p>
+                    <h2 id="response-heading" class="chat__panel-title">Conversation history</h2>
+                </div>
             </div>
 
-            <button type="submit"
-                    class="chat__submit">
-                Ask Novaris AI
-            </button>
-        </form>
-
-        @if (!string.IsNullOrWhiteSpace(Model.Response))
-        {
-            <hr class="chat__divider" />
-            <h2 class="chat__response-title">Response</h2>
-            <pre class="chat__response-box"><code>@Model.Response</code></pre>
-        }
+            <div class="chat__history" data-chat-history>
+                @foreach (var message in Model.Messages)
+                {
+                    <article class="chat__message chat__message--@message.Role">
+                        <p class="chat__message-role">@message.Role</p>
+                        <div class="chat__message-content markdown-content markdown-content--rendered">
+                            @Html.Raw(MarkdownRenderer.Render(message.Content))
+                        </div>
+                    </article>
+                }
+            </div>
+        </section>
     </div>
 </section>

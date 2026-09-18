@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design System Test Page</title>
+  <link rel="stylesheet" href="./src/index.css" />
+  <link rel="stylesheet" href="./src/components/sidebar.css" />
+  <link rel="stylesheet" href="./src/components/main.css" />
+</head>
+<body class="dark-mode-classic">
+    <aside class="sidebar">
+
+        <!-- Logo -->
+        <span class="app-logo">
+            Logo
+        </span>
+
+        <!-- New Chat Button -->
+        <button class="new-chat">
+            <span class="plus">+</span>
+            New chat
+        </button>
+
+        <!-- Nav Links -->
+        <nav class="nav-links">
+            <a href="#" class="nav-link active">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                Home
+            </a>
+            <a href="#" class="nav-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                Search
+            </a>
+            <a href="#" class="nav-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                </svg>
+                Projects
+            </a>
+            <a href="#" class="nav-link">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
+                </svg>
+                Settings
+            </a>
+        </nav>
+
+        <!-- Conversations -->
+        <div class="conversation-list">
+            <div class="section-header">Recent</div>
+            <div class="scroll">
+                <ul>
+                    <li class="active">
+                        <span class="conversation-name">Design system architecture</span>
+                    </li>
+                    <li>
+                        <span class="conversation-name">Refactor sidebar component</span>
+                    </li>
+                    <li>
+                        <span class="conversation-name">API integration planning</span>
+                    </li>
+                    <li>
+                        <span class="conversation-name">Unit test coverage review</span>
+                    </li>
+                </ul>
+
+                <div class="section-header earlier-heading">Earlier</div>
+                <ul>
+                    <li>
+                        <span class="conversation-name">CSS token migration</span>
+                    </li>
+                    <li>
+                        <span class="conversation-name">Dark mode implementation</span>
+                    </li>
+                    <li>
+                        <span class="conversation-name">Performance audit notes</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Identity / Footer -->
+        <a href="#" class="identity">
+            user@example.com
+        </a>
+
+    </aside>
+
+  <!--<main class="page main-content">-->
+  <main class="main-content page">
+    <section class="section">
+      <h2>Theme Switcher</h2>
+      <div class="row">
+        <button class="button secondary theme-toggle" type="button" data-theme="dark-mode-navy">Dark Navy</button>
+        <button class="button secondary theme-toggle" type="button" data-theme="dark-mode-classic">Dark Classic</button>
+        <button class="button secondary theme-toggle" type="button" data-theme="light-mode-classic">Light Classic</button>
+      </div>
+      <p id="theme-current"></p>
+    </section>
+
+    <section class="section">
+        <h1>Main Content Area</h1>
+        <p>Sidebar component is rendering on the left. Resize the window to test responsiveness.</p>
+    
+      <h2>Buttons</h2>
+      <div class="row">
+        <button class="button primary" type="button">Primary</button>
+        <button class="button secondary" type="button">Secondary</button>
+        <button class="button active" type="button">Active</button>
+        <button class="button disabled" type="button" disabled>Disabled</button>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Cards</h2>
+      <div class="grid">
+        <article class="card">
+          <header class="card-header">Default Card</header>
+          <div class="card-body">This card uses base styling.</div>
+          <footer class="card-footer">
+            <button class="button secondary" type="button">Cancel</button>
+            <button class="button primary" type="button">Confirm</button>
+          </footer>
+        </article>
+
+        <article class="card primary">
+          <header class="card-header">Primary Card</header>
+          <div class="card-body">Border color uses the accent token.</div>
+        </article>
+
+        <article class="card secondary">
+          <header class="card-header">Secondary Card</header>
+          <div class="card-body">Border color uses positive state token.</div>
+        </article>
+
+        <article class="card warning">
+          <header class="card-header">Warning Card</header>
+          <div class="card-body">Border color uses attention token.</div>
+        </article>
+
+        <article class="card disabled">
+          <header class="card-header">Disabled Card</header>
+          <div class="card-body">Pointer interactions are disabled.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section stack">
+      <h2>Chat View</h2>
+
+      <div class="work open">
+        <button class="worksum" type="button" aria-expanded="true">
+          <span class="arrow">▶</span>
+          <span class="tw">Worker / summarize.ts</span>
+          <span class="ms">148ms</span>
+        </button>
+
+        <div class="worksteps">
+          <div class="wstep">
+            <div class="wstep-row">
+              <span class="src">reader</span>
+              <span class="act">Loaded source data</span>
+              <span class="res">42 records</span>
+              <span class="ms">12ms</span>
+            </div>
+          </div>
+
+          <div class="wstep warn">
+            <div class="wstep-row">
+              <span class="src">validator</span>
+              <span class="act">Detected missing optional fields</span>
+              <span class="res">warning</span>
+              <span class="ms">18ms</span>
+            </div>
+          </div>
+
+          <pre class="wstep-detail">Sample detail output:
+line 1: processing payload
+line 2: applied fallback defaults
+line 3: completed with warnings</pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section stack">
+      <h2>File Components</h2>
+
+      <div class="file-card previewable">
+        <div class="file-card-row">
+          <div class="file-mark"><span>PDF</span></div>
+          <div class="file-meta">
+            <div class="file-name">report-q3.pdf</div>
+            <div class="file-sub">
+              <span class="file-sub-part">2.3 MB</span>
+              <span class="file-sub-part">Updated today</span>
+              <span class="file-sub-part">Ready</span>
+            </div>
+          </div>
+          <div class="file-actions">
+            <button class="button secondary btn-sm" type="button">Open</button>
+            <button class="button secondary btn-sm" type="button">More</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card failed">
+        <div class="file-card-row">
+          <div class="file-mark"><span>CSV</span></div>
+          <div class="file-meta">
+            <div class="file-name">import-data.csv</div>
+            <div class="file-sub">
+              <span class="file-sub-part">1.1 MB</span>
+              <span class="file-sub-part">Upload failed</span>
+            </div>
+            <div class="file-warning">
+              <span class="dot">●</span>
+              <span>Delimiter mismatch detected. Please verify the file format.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card superseded working">
+        <div class="file-card-row">
+          <div class="file-mark"><span>DOCX</span></div>
+          <div class="file-meta">
+            <div class="file-name">proposal-v1.docx</div>
+            <div class="file-sub">
+              <span class="file-sub-part">Superseded by proposal-v2.docx</span>
+            </div>
+            <div class="file-progress"><i></i></div>
+          </div>
+          <div class="kept-label">Old revision</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Grid</h2>
+      <div class="grid">
+        <div class="grid-item">Grid Item 1</div>
+        <div class="grid-item">Grid Item 2</div>
+        <div class="grid-item">Grid Item 3</div>
+        <div class="grid-item">Grid Item 4</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    var body = document.body;
+    var themeCurrent = document.getElementById('theme-current');
+    var themeButtons = document.querySelectorAll('.theme-toggle');
+    var themeClasses = ['dark-mode-navy', 'dark-mode-classic', 'light-mode-classic'];
+
+    function setTheme(nextTheme) {
+      if (themeClasses.indexOf(nextTheme) === -1) return;
+
+      themeClasses.forEach(function (themeClass) {
+        body.classList.remove(themeClass);
+      });
+
+      body.classList.add(nextTheme);
+
+      themeButtons.forEach(function (button) {
+        var isActiveTheme = button.getAttribute('data-theme') === nextTheme;
+        button.classList.toggle('active', isActiveTheme);
+        button.setAttribute('aria-pressed', String(isActiveTheme));
+      });
+
+      themeCurrent.textContent = 'Current theme: ' + nextTheme;
+    }
+
+    var currentTheme = 'light-mode-classic';
+    themeClasses.forEach(function (themeClass) {
+      if (body.classList.contains(themeClass)) {
+        currentTheme = themeClass;
+      }
+    });
+
+    themeButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        var selectedTheme = button.getAttribute('data-theme');
+        setTheme(selectedTheme);
+      });
+    });
+
+    setTheme(currentTheme);
+
+    document.querySelectorAll('.worksum').forEach(function (summaryButton) {
+      summaryButton.addEventListener('click', function () {
+        var workCard = summaryButton.closest('.work');
+        if (!workCard) return;
+
+        var isOpen = workCard.classList.toggle('open');
+        summaryButton.setAttribute('aria-expanded', String(isOpen));
+      });
+    });
+  </script>
+</body>
+</html>
