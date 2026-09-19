@@ -32,7 +32,7 @@
                 <div class="chat__settings" aria-label="Request settings">
                     <div class="chat__field">
                         <label asp-for="SelectedModel" class="chat__label"></label>
-                        <select asp-for="SelectedModel" class="chat__select">
+                        <select asp-for="SelectedModel" class="chat__select" data-chat-model>
                             @foreach (var option in ChatModelOptions.All)
                             {
                                 <option value="@option.Value">@option.Label</option>
@@ -45,7 +45,7 @@
 
                     <div class="chat__field">
                         <label asp-for="PromptPreset" class="chat__label"></label>
-                        <select asp-for="PromptPreset" class="chat__select">
+                        <select asp-for="PromptPreset" class="chat__select" data-chat-preset>
                             @foreach (var preset in Enum.GetValues<NovarisAI.Core.Models.PromptPreset>())
                             {
                                 var label = preset switch
