@@ -14,12 +14,19 @@ declare global {
 const themeStorageKey = "novaris-theme";
 const fallbackTheme = "light";
 const supportedThemes = readSupportedThemes();
+const phi4Model = "phi4";
+const phi4Presets = new Set([
+    "Math",
+    "AnalyticalReasoning",
+    "TechnicalProblemSolving"
+]);
 
 applyStoredTheme();
 
 whenDocumentReady(() => {
     initializeThemeToggle();
     initializeSyntaxHighlighting();
+    initializePhi4PresetSelection();
     initializeChatRequestState();
 });
 
@@ -56,6 +63,22 @@ function initializeThemeToggle(): void {
             storeTheme(requestedTheme);
         });
     }
+}
+
+function initializePhi4PresetSelection(): void {
+    const form = document.querySelector<HTMLFormElement>("[data-chat-request-form]");
+    const model = form?.querySelector<HTMLSelectElement>("[data-chat-model]");
+    const preset = form?.querySelector<HTMLSelectElement>("[data-chat-preset]");
+
+    if (model === undefined || model === null || preset === undefined || preset === null) {
+        return;
+    }
+
+    preset.addEventListener("change", () => {
+        if (phi4Presets.has(preset.value)) {
+            model.value = phi4Model;
+        }
+    });
 }
 
 function initializeChatRequestState(): void {

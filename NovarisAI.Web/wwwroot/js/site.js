@@ -2,10 +2,17 @@ import { whenDocumentReady } from "./modules/dom.js";
 const themeStorageKey = "novaris-theme";
 const fallbackTheme = "light";
 const supportedThemes = readSupportedThemes();
+const phi4Model = "phi4";
+const phi4Presets = new Set([
+    "Math",
+    "AnalyticalReasoning",
+    "TechnicalProblemSolving"
+]);
 applyStoredTheme();
 whenDocumentReady(() => {
     initializeThemeToggle();
     initializeSyntaxHighlighting();
+    initializePhi4PresetSelection();
     initializeChatRequestState();
 });
 window.addEventListener("novaris-highlight-ready", initializeSyntaxHighlighting);
@@ -32,6 +39,19 @@ function initializeThemeToggle() {
             storeTheme(requestedTheme);
         });
     }
+}
+function initializePhi4PresetSelection() {
+    const form = document.querySelector("[data-chat-request-form]");
+    const model = form?.querySelector("[data-chat-model]");
+    const preset = form?.querySelector("[data-chat-preset]");
+    if (model === undefined || model === null || preset === undefined || preset === null) {
+        return;
+    }
+    preset.addEventListener("change", () => {
+        if (phi4Presets.has(preset.value)) {
+            model.value = phi4Model;
+        }
+    });
 }
 function initializeChatRequestState() {
     const form = document.querySelector("[data-chat-request-form]");
