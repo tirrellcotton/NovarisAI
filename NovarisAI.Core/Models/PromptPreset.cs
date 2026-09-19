@@ -4,10 +4,14 @@ public enum PromptPreset
 {
     General,
     CSharpDeveloper,
+    PythonDeveloper,
     CodeReview,
     UnitTests,
     SoftwareArchitecture,
-    Sql,
+    SQL,
     Frontend,
-    Documentation
+    Documentation,
+    Math,
+    AnalyticalReasoning,
+    TechnicalProblemSolving
 }

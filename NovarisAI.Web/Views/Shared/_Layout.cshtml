@@ -7,6 +7,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - Novaris AI</title>
+    <link rel="icon" type="image/png" href="~/favicon.png"/>
     <script type="importmap"></script>
     <script>
         window.novarisThemes = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(supportedThemes));
@@ -32,8 +33,11 @@
     <nav class="site-nav">
         <div class="site-nav__inner">
             <div class="site-nav__branding">
-                <a class="site-nav__brand" asp-area="" asp-controller="Home" asp-action="Index">Novaris AI</a>
-                <p class="site-nav__tagline">Local coding assistant for fast iteration.</p>
+                <a class="site-nav__brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img class="site-nav__mark" src="~/favicon.png" alt="" aria-hidden="true"/>
+                    <span>Novaris AI</span>
+                </a>
+                <p class="site-nav__tagline">Local intelligence system for fast iteration.</p>
             </div>
 
             <div class="theme-toggle" role="group" aria-label="Color theme">
