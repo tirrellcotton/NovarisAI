@@ -10,7 +10,6 @@
         <section class="chat__panel" aria-labelledby="prompt-heading">
             <div class="chat__panel-header">
                 <div>
-                    <p class="chat__panel-kicker">Prompt</p>
                     <h2 id="prompt-heading" class="chat__panel-title">Ask Novaris AI</h2>
                 </div>
                 <p class="chat__panel-copy">Choose the model and assistant mode for this request.</p>
@@ -52,9 +51,14 @@
                                 var label = preset switch
                                 {
                                     NovarisAI.Core.Models.PromptPreset.CSharpDeveloper => "C# Developer",
+                                    NovarisAI.Core.Models.PromptPreset.PythonDeveloper => "Python Developer",
                                     NovarisAI.Core.Models.PromptPreset.CodeReview => "Code Review",
                                     NovarisAI.Core.Models.PromptPreset.UnitTests => "Unit Tests",
+                                    NovarisAI.Core.Models.PromptPreset.Frontend => "Front End Developer",
                                     NovarisAI.Core.Models.PromptPreset.SoftwareArchitecture => "Software Architecture",
+                                    NovarisAI.Core.Models.PromptPreset.Math => "Math (Phi-4)",
+                                    NovarisAI.Core.Models.PromptPreset.AnalyticalReasoning => "Analytical Reasoning (Phi-4)",
+                                    NovarisAI.Core.Models.PromptPreset.TechnicalProblemSolving => "Technical Problem Solving (Phi-4)",
                                     _ => preset.ToString()
                                 };
 
@@ -72,7 +76,7 @@
                     <textarea asp-for="Prompt"
                               class="chat__textarea"
                               rows="8"
-                              placeholder="Ask a programming question, request a refactor, or describe a bug...">
+                              placeholder="Ask a coding, math, analysis, architecture, documentation, or technical problem-solving question...">
                     </textarea>
 
                     <span asp-validation-for="Prompt"
@@ -87,6 +91,16 @@
                         Sending request
                     </span>
                 </button>
+
+                <aside class="chat__model-guide" aria-labelledby="model-guide-heading">
+                    <h3 id="model-guide-heading" class="chat__model-guide-title">Model guide</h3>
+                    <ul class="chat__model-guide-list">
+                        <li><strong>Qwen Coder 7B:</strong> Fast, lightweight coding help for quick snippets and straightforward programming tasks.</li>
+                        <li><strong>Qwen Coder 14B:</strong> Primary coding model for involved implementation, debugging, and code reasoning.</li>
+                        <li><strong>Gemma 3 12B:</strong> General-purpose assistant for explanations, drafting, summaries, and broad questions.</li>
+                        <li><strong>Phi-4:</strong> Technical reasoning for analytical, math, logic, and technical problem-solving tasks.</li>
+                    </ul>
+                </aside>
             </form>
         </section>
 
@@ -96,7 +110,6 @@
                  @(Model.Messages.Count == 0 ? "hidden" : "")>
             <div class="chat__panel-header">
                 <div>
-                    <p class="chat__panel-kicker">Conversation</p>
                     <h2 id="response-heading" class="chat__panel-title">Conversation history</h2>
                 </div>
             </div>
