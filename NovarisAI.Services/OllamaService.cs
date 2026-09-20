@@ -78,7 +78,33 @@ public sealed class OllamaService(
         {
             Model = model,
             Stream = stream,
+            Options = new OllamaGenerationOptions
+            {
+                Temperature = GetDefaultTemperature(promptPreset)
+            },
             Messages = [CreateSystemMessage(promptPreset), .. messages]
+        };
+    }
+
+    private static double GetDefaultTemperature(PromptPreset promptPreset)
+    {
+        return promptPreset switch
+        {
+            PromptPreset.General or
+            PromptPreset.Frontend or
+            PromptPreset.Documentation => 0.6,
+
+            PromptPreset.CSharpDeveloper or
+            PromptPreset.PythonDeveloper or
+            PromptPreset.CodeReview or
+            PromptPreset.UnitTests or
+            PromptPreset.SoftwareArchitecture or
+            PromptPreset.SQL or
+            PromptPreset.Math or
+            PromptPreset.AnalyticalReasoning or
+            PromptPreset.TechnicalProblemSolving => 0.2,
+
+            _ => throw new ArgumentOutOfRangeException(nameof(promptPreset), promptPreset, null)
         };
     }
 
