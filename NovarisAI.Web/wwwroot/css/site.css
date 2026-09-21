@@ -214,41 +214,6 @@ select {
   padding: 0 var(--space-4);
 }
 
-.pwa-update {
-  position: fixed;
-  right: var(--space-4);
-  bottom: var(--space-4);
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  max-width: min(30rem, calc(100vw - (var(--space-4) * 2)));
-  padding: var(--space-3);
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-lg);
-  background: var(--surface-base);
-  box-shadow: var(--shadow-lg);
-  color: var(--text-primary);
-  font-size: var(--text-sm);
-}
-
-.pwa-update__button {
-  flex: 0 0 auto;
-  min-height: 32px;
-  padding: var(--space-2) var(--space-3);
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
-  background: var(--brand-primary);
-  color: var(--text-on-fill);
-  cursor: pointer;
-}
-
-.pwa-update__button:hover,
-.pwa-update__button:focus-visible {
-  background: var(--brand-primary-hover);
-  outline: none;
-}
-
 .site__main {
   height: 100%;
   min-height: 0;
@@ -775,13 +740,6 @@ select {
 
   .theme-toggle {
     width: 100%;
-  }
-
-  .pwa-update {
-    right: var(--space-3);
-    bottom: var(--space-3);
-    align-items: stretch;
-    flex-direction: column;
   }
 
   .theme-toggle__button,

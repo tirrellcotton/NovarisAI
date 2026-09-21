@@ -61,20 +61,6 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.Use(async (context, next) =>
-{
-    if (context.Request.Path.Equals("/service-worker.js", StringComparison.OrdinalIgnoreCase))
-    {
-        context.Response.OnStarting(() =>
-        {
-            context.Response.Headers.CacheControl = "no-cache";
-            return Task.CompletedTask;
-        });
-    }
-
-    await next();
-});
-
 app.MapStaticAssets();
 
 app.MapControllerRoute(

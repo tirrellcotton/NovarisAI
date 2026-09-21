@@ -15,7 +15,6 @@ const phi4Presets = new Set([
 ]);
 applyStoredTheme();
 whenDocumentReady(() => {
-    initializeProgressiveWebApp();
     initializeThemeToggle();
     initializeSyntaxHighlighting();
     initializePhi4PresetSelection();
@@ -247,61 +246,6 @@ function applyTheme(theme, root, themeButtons) {
         button.setAttribute("aria-pressed", isActive ? "true" : "false");
         button.classList.toggle("theme-toggle__button--active", isActive);
     }
-}
-function initializeProgressiveWebApp() {
-    if (!("serviceWorker" in navigator)) {
-        return;
-    }
-    void navigator.serviceWorker.register("/service-worker.js", {
-        scope: "/",
-        updateViaCache: "none"
-    }).then((registration) => {
-        observeServiceWorkerUpdates(registration);
-    }).catch(() => {
-        // PWA registration is progressive enhancement and must never block chat.
-    });
-}
-function observeServiceWorkerUpdates(registration) {
-    const updatePrompt = document.querySelector("[data-pwa-update]");
-    const updateAction = document.querySelector("[data-pwa-update-action]");
-    let refreshRequested = false;
-    const showUpdatePrompt = () => {
-        if (registration.waiting === null || updatePrompt === null || updateAction === null) {
-            return;
-        }
-        updatePrompt.hidden = false;
-        updateAction.onclick = () => {
-            if (isChatRequestActive()) {
-                updateAction.textContent = "Finish request to update";
-                return;
-            }
-            refreshRequested = true;
-            registration.waiting?.postMessage({ type: "SKIP_WAITING" });
-        };
-    };
-    if (registration.waiting !== null) {
-        showUpdatePrompt();
-    }
-    registration.addEventListener("updatefound", () => {
-        const installingWorker = registration.installing;
-        if (installingWorker === null) {
-            return;
-        }
-        installingWorker.addEventListener("statechange", () => {
-            if (installingWorker.state === "installed" && navigator.serviceWorker.controller !== null) {
-                showUpdatePrompt();
-            }
-        });
-    });
-    navigator.serviceWorker.addEventListener("controllerchange", () => {
-        if (refreshRequested) {
-            window.location.reload();
-        }
-    }, { once: true });
-}
-function isChatRequestActive() {
-    return document.querySelector("[data-chat-request-form]")
-        ?.getAttribute("aria-busy") === "true";
 }
 function updateThemeColor(theme) {
     const themeColor = themeColors[theme];
