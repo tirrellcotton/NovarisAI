@@ -88,6 +88,10 @@ public sealed class OllamaService(
 
     private static double GetDefaultTemperature(PromptPreset promptPreset)
     {
+        // The temperature setting controls the randomness of the model's output.
+        // A lower temperature (e.g., 0.2) makes the output more deterministic and focused,
+        // while a higher temperature (e.g., 0.6) allows for more creativity and variability
+        // in responses.
         return promptPreset switch
         {
             PromptPreset.General or

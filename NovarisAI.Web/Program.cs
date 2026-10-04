@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using NovarisAI.BusinessLogic;
 using NovarisAI.Core.Configuration;
 using NovarisAI.Core.Interfaces;
+using NovarisAI.DataAccess.Contexts;
 using NovarisAI.Services;
-using NovarisAI.Web.Data;
 using NovarisAI.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,7 @@ builder.Services.AddHttpClient<IOllamaService, OllamaService>(client =>
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<IMarkdownRenderer, MarkdownRenderer>();
+builder.Services.AddScoped<IConversationManager, ConversationManager>();
 
 builder.Services.Configure<OllamaOptions>(
     builder.Configuration.GetSection(OllamaOptions.SectionName));
