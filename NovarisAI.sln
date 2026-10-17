@@ -8,6 +8,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NovarisAI.Core", "NovarisAI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NovarisAI.Services", "NovarisAI.Services\NovarisAI.Services.csproj", "{D3B1AE5A-AD8B-47D0-9063-A151A8FBB718}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NovarisAI.DataAccess", "NovarisAI.DataAccess\NovarisAI.DataAccess.csproj", "{AA7B9BDB-0342-43E7-881A-4475B710EE9B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NovarisAI.BusinessLogic", "NovarisAI.BusinessLogic\NovarisAI.BusinessLogic.csproj", "{663CE0AA-E42B-4453-8CE5-7509C9482A66}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,5 +30,13 @@ Global
 		{D3B1AE5A-AD8B-47D0-9063-A151A8FBB718}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3B1AE5A-AD8B-47D0-9063-A151A8FBB718}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3B1AE5A-AD8B-47D0-9063-A151A8FBB718}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA7B9BDB-0342-43E7-881A-4475B710EE9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA7B9BDB-0342-43E7-881A-4475B710EE9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA7B9BDB-0342-43E7-881A-4475B710EE9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA7B9BDB-0342-43E7-881A-4475B710EE9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{663CE0AA-E42B-4453-8CE5-7509C9482A66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{663CE0AA-E42B-4453-8CE5-7509C9482A66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{663CE0AA-E42B-4453-8CE5-7509C9482A66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{663CE0AA-E42B-4453-8CE5-7509C9482A66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using NovarisAI.Core.Models;
 
-namespace NovarisAI.Web.Data;
+namespace NovarisAI.DataAccess.Contexts;
 
 public sealed class NovarisDbContext(DbContextOptions<NovarisDbContext> options) : DbContext(options)
 {

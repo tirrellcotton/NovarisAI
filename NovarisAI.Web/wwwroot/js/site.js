@@ -2,6 +2,11 @@ import { whenDocumentReady } from "./modules/dom.js";
 const themeStorageKey = "novaris-theme";
 const fallbackTheme = "light";
 const supportedThemes = readSupportedThemes();
+const themeColors = {
+    light: "#f6f7f9",
+    dark: "#171a1d",
+    blue: "#0d1220"
+};
 const phi4Model = "phi4";
 const phi4Presets = new Set([
     "Math",
@@ -235,10 +240,18 @@ function applyStoredTheme() {
 }
 function applyTheme(theme, root, themeButtons) {
     root.dataset.theme = theme;
+    updateThemeColor(theme);
     for (const button of themeButtons) {
         const isActive = button.dataset.themeOption === theme;
         button.setAttribute("aria-pressed", isActive ? "true" : "false");
         button.classList.toggle("theme-toggle__button--active", isActive);
+    }
+}
+function updateThemeColor(theme) {
+    const themeColor = themeColors[theme];
+    const themeColorMeta = document.querySelector("[data-theme-color]");
+    if (themeColor !== undefined && themeColorMeta !== null) {
+        themeColorMeta.content = themeColor;
     }
 }
 function readStoredTheme() {
