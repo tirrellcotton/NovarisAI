@@ -26,6 +26,21 @@ public class HomeController(
     }
 
     /// <summary>
+    /// Removes the displayed conversation and returns to an empty conversation.
+    /// </summary>
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ClearHistory(int? conversationId, CancellationToken cancellationToken)
+    {
+        if (conversationId.HasValue)
+        {
+            await conversationManager.DeleteConversationAsync(conversationId.Value, cancellationToken);
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    /// <summary>
     /// Handles the submission of a chat prompt, sending it to the Ollama service and updating the conversation with the
     /// user's message and the assistant's response.
     /// </summary>

@@ -347,6 +347,40 @@ select {
   outline: none;
 }
 
+.chat__prompt-options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+}
+
+.chat__prompt-options[hidden] {
+  display: none;
+}
+
+.chat__prompt-options p {
+  margin: 0;
+}
+
+.chat__enter-preference {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+}
+
+.chat__enter-preference input {
+  accent-color: var(--brand-primary);
+}
+
+.chat__enter-preference input:focus-visible {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
 .chat__select {
   width: 100%;
   padding: var(--space-2) var(--space-3);
@@ -372,6 +406,14 @@ select {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
+}
+
+.chat__clear-history-form {
+  margin-left: auto;
+}
+
+.chat__clear-history-form .chat__submit {
+  min-width: auto;
 }
 
 .chat__stop[hidden] {
@@ -512,12 +554,13 @@ select {
 }
 
 .chat__message-content {
-  padding: var(--space-2);
+  min-width: 0;
+  padding: var(--space-3);
   overflow-x: auto;
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   background: var(--surface-raised);
-  color: var(--text-secondary);
+  color: var(--text-primary);
   font-size: var(--text-xs);
   line-height: var(--leading-normal);
   white-space: pre-wrap;
@@ -593,13 +636,31 @@ select {
 
 .chat__history {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   align-content: start;
   gap: var(--space-3);
 }
 
 .chat__message {
   display: grid;
+  justify-self: start;
+  width: fit-content;
+  min-width: 0;
+  max-width: 90%;
   gap: var(--space-1);
+}
+
+.chat__message--assistant {
+  justify-self: end;
+}
+
+.chat__message--assistant .chat__message-role {
+  text-align: right;
+}
+
+.chat__message--assistant .chat__message-content {
+  border-top-right-radius: var(--radius-sm);
+  background: var(--surface-raised-hi);
 }
 
 .chat__message-role {
@@ -617,6 +678,8 @@ select {
 
 .chat__message--user .chat__message-content {
   border-color: var(--brand-primary);
+  border-top-left-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--brand-primary) 16%, var(--surface-base));
 }
 
 .error-page {

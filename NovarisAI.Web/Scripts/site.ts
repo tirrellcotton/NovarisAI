@@ -1,4 +1,6 @@
 import { whenDocumentReady } from "./modules/dom.js";
+import { initializePromptKeyboard } from "./modules/prompt-keyboard.js";
+import { initializeHistoryScroll } from "./modules/history-scroll.js";
 
 type ThemeName = string;
 
@@ -97,6 +99,8 @@ function initializeChatRequestState(): void {
     const validationSummary = form?.querySelector<HTMLElement>("[data-valmsg-summary]");
     const conversationId = form?.querySelector<HTMLInputElement>("[data-chat-conversation-id]");
     const prompt = form?.querySelector<HTMLTextAreaElement>("[name=Prompt]");
+    const clearHistoryForm = document.querySelector<HTMLFormElement>("[data-chat-clear-form]");
+    const clearHistoryButton = clearHistoryForm?.querySelector<HTMLButtonElement>("[data-chat-clear]");
 
     if (form === null || form === undefined
         || submitButton === null || submitButton === undefined
@@ -109,6 +113,9 @@ function initializeChatRequestState(): void {
         || prompt === null || prompt === undefined) {
         return;
     }
+
+    initializePromptKeyboard(form, prompt, submitButton);
+    const followLatestMessage = initializeHistoryScroll(history);
 
     let activeRequest: AbortController | undefined;
 
@@ -124,6 +131,9 @@ function initializeChatRequestState(): void {
         submitButton.classList.remove("chat__submit--loading");
         submitStatus.hidden = true;
         stopButton.hidden = true;
+        if (clearHistoryButton) {
+            clearHistoryButton.disabled = false;
+        }
     };
 
     const markResponseStarted = (): void => {
@@ -206,16 +216,52 @@ function initializeChatRequestState(): void {
     };
 
     const updateConversationLocation = (id: string | null): void => {
-        if (id === null || id.length === 0) {
+        if (id === null) {
             return;
         }
 
         conversationId.value = id;
 
         const url = new URL(window.location.href);
-        url.searchParams.set("conversationId", id);
+        if (id.length === 0) {
+            url.searchParams.delete("conversationId");
+        } else {
+            url.searchParams.set("conversationId", id);
+        }
         window.history.replaceState({}, "", url);
     };
+
+    clearHistoryForm?.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (submitButton.disabled || !clearHistoryButton) {
+            return;
+        }
+
+        submitButton.disabled = true;
+        clearHistoryButton.disabled = true;
+        clearHistoryForm.setAttribute("aria-busy", "true");
+        clearError();
+
+        try {
+            const requestBody = new FormData(clearHistoryForm);
+            requestBody.set("conversationId", conversationId.value);
+            const response = await fetch(clearHistoryForm.action, { method: "POST", body: requestBody });
+            if (!response.ok) {
+                throw new Error("Unable to clear conversation history. Please try again.");
+            }
+
+            history.replaceChildren();
+            responsePanel.hidden = true;
+            updateConversationLocation("");
+            requestStatus.textContent = "Conversation history cleared.";
+            prompt.focus();
+        } catch (error) {
+            showError(error instanceof Error ? error.message : "Unable to clear conversation history.");
+        } finally {
+            clearHistoryForm.removeAttribute("aria-busy");
+            resetRequestState();
+        }
+    });
 
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -241,6 +287,9 @@ function initializeChatRequestState(): void {
         stopButton.disabled = false;
         form.setAttribute("aria-busy", "true");
         submitButton.disabled = true;
+        if (clearHistoryButton) {
+            clearHistoryButton.disabled = true;
+        }
         submitButton.classList.add("chat__submit--loading");
         submitStatus.hidden = false;
 
@@ -248,6 +297,7 @@ function initializeChatRequestState(): void {
         const promptContent = prompt.value;
         const userMessageContent = appendMessage("user", promptContent);
         const responseContent = appendMessage("assistant", "");
+        followLatestMessage();
         const requestBody = new FormData(form);
         prompt.value = "";
 
