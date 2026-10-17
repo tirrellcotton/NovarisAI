@@ -150,7 +150,11 @@ public class HomeController(
                     cancellationToken);
             }
         }
-        catch (TaskCanceledException) when (!HttpContext.RequestAborted.IsCancellationRequested)
+        catch (OperationCanceledException) when (HttpContext.RequestAborted.IsCancellationRequested)
+        {
+            // The client stopped the request. The same token cancels the upstream Ollama stream.
+        }
+        catch (OperationCanceledException)
         {
             // If the request was canceled due to a timeout, set the response status code to 504 Gateway Timeout.
             if (!Response.HasStarted)

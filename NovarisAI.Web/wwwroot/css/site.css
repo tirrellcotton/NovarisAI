@@ -368,6 +368,26 @@ select {
   outline: none;
 }
 
+.chat__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chat__stop[hidden] {
+  display: none;
+}
+
+.chat__request-status {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+.chat__request-status:empty {
+  display: none;
+}
+
 .chat__submit {
   display: inline-flex;
   align-items: center;
@@ -391,6 +411,12 @@ select {
 .chat__submit:focus-visible {
   background: var(--brand-primary-hover);
   outline: none;
+}
+
+.chat__stop {
+  --brand-primary: #c23b47;
+  --brand-primary-hover: #a52f3a;
+  color: #ffffff;
 }
 
 .chat__submit-status {
