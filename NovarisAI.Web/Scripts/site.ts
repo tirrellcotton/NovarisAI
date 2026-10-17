@@ -89,6 +89,8 @@ function initializePhi4PresetSelection(): void {
 function initializeChatRequestState(): void {
     const form = document.querySelector<HTMLFormElement>("[data-chat-request-form]");
     const submitButton = form?.querySelector<HTMLButtonElement>("[data-chat-submit]");
+    const stopButton = form?.querySelector<HTMLButtonElement>("[data-chat-stop]");
+    const requestStatus = form?.querySelector<HTMLElement>("[data-chat-request-status]");
     const submitStatus = submitButton?.querySelector<HTMLElement>(".chat__submit-status");
     const responsePanel = document.querySelector<HTMLElement>("[data-chat-response]");
     const history = responsePanel?.querySelector<HTMLElement>("[data-chat-history]");
@@ -98,6 +100,8 @@ function initializeChatRequestState(): void {
 
     if (form === null || form === undefined
         || submitButton === null || submitButton === undefined
+        || stopButton === null || stopButton === undefined
+        || requestStatus === null || requestStatus === undefined
         || submitStatus === null || submitStatus === undefined
         || responsePanel === null || responsePanel === undefined
         || history === null || history === undefined
@@ -106,11 +110,20 @@ function initializeChatRequestState(): void {
         return;
     }
 
+    let activeRequest: AbortController | undefined;
+
+    stopButton.addEventListener("click", () => {
+        activeRequest?.abort();
+        stopButton.disabled = true;
+    });
+
     const resetRequestState = (): void => {
+        activeRequest = undefined;
         form.removeAttribute("aria-busy");
         submitButton.disabled = false;
         submitButton.classList.remove("chat__submit--loading");
         submitStatus.hidden = true;
+        stopButton.hidden = true;
     };
 
     const markResponseStarted = (): void => {
@@ -153,7 +166,8 @@ function initializeChatRequestState(): void {
         return messageContent;
     };
 
-    const renderMarkdown = async (messageContent: HTMLElement, markdown: string): Promise<void> => {
+    const renderMarkdown = async (
+        messageContent: HTMLElement, markdown: string, signal?: AbortSignal): Promise<void> => {
         const markdownUrl = form.dataset.markdownUrl;
 
         if (markdownUrl === undefined) {
@@ -174,6 +188,7 @@ function initializeChatRequestState(): void {
             const response = await fetch(markdownUrl, {
                 method: "POST",
                 body: requestBody,
+                signal,
                 headers: {
                     Accept: "text/html"
                 }
@@ -205,6 +220,10 @@ function initializeChatRequestState(): void {
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
+        if (prompt.value.trim().length === 0) {
+            return;
+        }
+
         if (!form.checkValidity()) {
             return;
         }
@@ -215,6 +234,11 @@ function initializeChatRequestState(): void {
         }
 
         clearError();
+        const controller = new AbortController();
+        activeRequest = controller;
+        requestStatus.textContent = "";
+        stopButton.hidden = false;
+        stopButton.disabled = false;
         form.setAttribute("aria-busy", "true");
         submitButton.disabled = true;
         submitButton.classList.add("chat__submit--loading");
@@ -233,6 +257,7 @@ function initializeChatRequestState(): void {
             const response = await fetch(form.dataset.streamUrl ?? form.action, {
                 method: "POST",
                 body: requestBody,
+                signal: controller.signal,
                 headers: {
                     Accept: "text/plain"
                 }
@@ -245,42 +270,22 @@ function initializeChatRequestState(): void {
                 throw new Error(message || "Unable to complete the request.");
             }
 
-            const reader = response.body?.getReader();
-
-            if (reader === undefined) {
-                throw new Error("The browser could not read the streamed response.");
-            }
-
-            const decoder = new TextDecoder();
-            let hasReceivedContent = false;
-
-            while (true) {
-                const { done, value } = await reader.read();
-
-                if (done) {
-                    break;
-                }
-
-                const chunk = decoder.decode(value, { stream: true });
-                responseContent.textContent += chunk;
-
-                if (!hasReceivedContent && chunk.length > 0) {
-                    hasReceivedContent = true;
-                    markResponseStarted();
-                }
-            }
-
-            const finalChunk = decoder.decode();
-            responseContent.textContent += finalChunk;
-
-            if (!hasReceivedContent && finalChunk.length > 0) {
-                markResponseStarted();
-            }
-
-            await renderMarkdown(responseContent, responseContent.textContent ?? "");
+            await readChatResponse(response, responseContent, markResponseStarted, controller.signal);
+            stopButton.hidden = true;
+            activeRequest = undefined;
+            await renderMarkdown(responseContent, responseContent.textContent ?? "", controller.signal);
         } catch (error) {
             if (responseContent.textContent?.trim().length === 0) {
-                responseContent.parentElement?.parentElement?.remove();
+                responseContent.parentElement?.remove();
+            }
+
+            if (controller.signal.aborted) {
+                requestStatus.textContent = "Request stopped.";
+                if (prompt.value.length === 0) {
+                    prompt.value = promptContent;
+                }
+                prompt.focus();
+                return;
             }
 
             showError(error instanceof Error ? error.message : "Unable to complete the request.");
@@ -290,6 +295,37 @@ function initializeChatRequestState(): void {
     });
 
     window.addEventListener("pageshow", resetRequestState);
+}
+
+async function readChatResponse(
+    response: Response,
+    content: HTMLElement,
+    onContent: () => void,
+    signal: AbortSignal): Promise<void> {
+    const reader = response.body?.getReader();
+    if (reader === undefined) {
+        throw new Error("The browser could not read the streamed response.");
+    }
+
+    const decoder = new TextDecoder();
+    try {
+        while (true) {
+            const { done, value } = await reader.read();
+            signal.throwIfAborted();
+            if (done) {
+                content.textContent += decoder.decode();
+                return;
+            }
+
+            const chunk = decoder.decode(value, { stream: true });
+            content.textContent += chunk;
+            if (chunk.length > 0) {
+                onContent();
+            }
+        }
+    } finally {
+        reader.releaseLock();
+    }
 }
 
 function highlightCodeBlocks(container: ParentNode): void {

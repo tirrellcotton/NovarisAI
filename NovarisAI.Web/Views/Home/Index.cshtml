@@ -84,13 +84,17 @@
                     </span>
                 </div>
 
-                <button type="submit" class="chat__submit" data-chat-submit>
-                    <span class="chat__submit-label">Ask Novaris AI</span>
-                    <span class="chat__submit-status" aria-live="polite" hidden>
-                        <span class="chat__spinner" aria-hidden="true"></span>
-                        Sending request
-                    </span>
-                </button>
+                <div class="chat__actions">
+                    <button type="submit" class="chat__submit" data-chat-submit>
+                        <span class="chat__submit-label">Ask Novaris AI</span>
+                        <span class="chat__submit-status" aria-live="polite" hidden>
+                            <span class="chat__spinner" aria-hidden="true"></span>
+                            Sending request
+                        </span>
+                    </button>
+                    <button type="button" class="chat__submit chat__stop" data-chat-stop hidden>Stop request</button>
+                </div>
+                <p class="chat__request-status" role="status" data-chat-request-status></p>
 
                 <aside class="chat__model-guide" aria-labelledby="model-guide-heading">
                     <h3 id="model-guide-heading" class="chat__model-guide-title">Model guide</h3>
