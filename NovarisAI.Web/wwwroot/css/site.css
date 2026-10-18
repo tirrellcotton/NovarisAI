@@ -120,49 +120,9 @@ select {
 
 .site {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
   height: 100vh;
   overflow: hidden;
-}
-
-.site__header {
-  background: var(--surface-base);
-  border-bottom: 1px solid var(--border);
-}
-
-.site-nav__inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
-  width: 100%;
-  min-height: 68px;
-  margin: 0 auto;
-  padding: var(--space-3) var(--space-4);
-}
-
-.site-nav__branding {
-  display: grid;
-  gap: var(--space-1);
-}
-
-.site-nav__brand {
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  font-size: var(--text-heading);
-  font-weight: var(--weight-semi);
-  text-decoration: none;
-}
-
-.site-nav__brand:hover,
-.site-nav__brand:focus-visible {
-  color: var(--brand-primary);
-}
-
-.site-nav__tagline {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: var(--text-xs);
 }
 
 .theme-toggle {
@@ -269,6 +229,11 @@ select {
   margin-bottom: var(--space-4);
 }
 
+.chat__panel-header--prompt {
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 .chat__panel-kicker {
   margin: 0 0 var(--space-1);
   color: var(--text-muted);
@@ -284,12 +249,6 @@ select {
   color: var(--text-primary);
   font-size: var(--text-heading);
   font-weight: var(--weight-semi);
-}
-
-.chat__panel-copy {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: var(--text-xs);
 }
 
 .chat__form,
@@ -732,28 +691,6 @@ select {
   font-size: var(--text-sm);
 }
 
-.site-nav__brand {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-family: var(--font-sans);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.site-nav__mark {
-  width: 2.15rem;
-  height: 2.15rem;
-  border: 1px solid color-mix(in srgb, var(--brand-primary) 45%, var(--border));
-  border-radius: 50%;
-  box-shadow: 0 0 18px color-mix(in srgb, var(--brand-primary) 28%, transparent);
-}
-
-.site-nav__tagline {
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-}
-
 .theme-toggle,
 .theme-toggle__button {
   border-radius: var(--radius-pill);
@@ -821,7 +758,6 @@ select {
     grid-template-columns: 1fr;
   }
 
-  .site-nav__inner,
   .chat__panel-header {
     align-items: stretch;
     flex-direction: column;
