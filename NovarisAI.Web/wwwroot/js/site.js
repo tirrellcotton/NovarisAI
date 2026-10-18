@@ -1,4 +1,5 @@
 import { whenDocumentReady } from "./modules/dom.js";
+import { initializeChatRequestState } from "./modules/chat-request.js";
 const themeStorageKey = "novaris-theme";
 const fallbackTheme = "light";
 const supportedThemes = readSupportedThemes();
@@ -18,7 +19,7 @@ whenDocumentReady(() => {
     initializeThemeToggle();
     initializeSyntaxHighlighting();
     initializePhi4PresetSelection();
-    initializeChatRequestState();
+    initializeChatRequestState(highlightCodeBlocks);
 });
 window.addEventListener("novaris-highlight-ready", initializeSyntaxHighlighting);
 function initializeSyntaxHighlighting() {
@@ -57,170 +58,6 @@ function initializePhi4PresetSelection() {
             model.value = phi4Model;
         }
     });
-}
-function initializeChatRequestState() {
-    const form = document.querySelector("[data-chat-request-form]");
-    const submitButton = form?.querySelector("[data-chat-submit]");
-    const submitStatus = submitButton?.querySelector(".chat__submit-status");
-    const responsePanel = document.querySelector("[data-chat-response]");
-    const history = responsePanel?.querySelector("[data-chat-history]");
-    const validationSummary = form?.querySelector("[data-valmsg-summary]");
-    const conversationId = form?.querySelector("[data-chat-conversation-id]");
-    const prompt = form?.querySelector("[name=Prompt]");
-    if (form === null || form === undefined
-        || submitButton === null || submitButton === undefined
-        || submitStatus === null || submitStatus === undefined
-        || responsePanel === null || responsePanel === undefined
-        || history === null || history === undefined
-        || conversationId === null || conversationId === undefined
-        || prompt === null || prompt === undefined) {
-        return;
-    }
-    const resetRequestState = () => {
-        form.removeAttribute("aria-busy");
-        submitButton.disabled = false;
-        submitButton.classList.remove("chat__submit--loading");
-        submitStatus.hidden = true;
-    };
-    const markResponseStarted = () => {
-        submitButton.classList.remove("chat__submit--loading");
-        submitStatus.hidden = true;
-    };
-    const showError = (message) => {
-        if (validationSummary === null || validationSummary === undefined) {
-            return;
-        }
-        validationSummary.textContent = message;
-        validationSummary.classList.add("validation-summary-errors");
-    };
-    const clearError = () => {
-        if (validationSummary === null || validationSummary === undefined) {
-            return;
-        }
-        validationSummary.textContent = "";
-        validationSummary.classList.remove("validation-summary-errors");
-    };
-    const appendMessage = (role, content) => {
-        const message = document.createElement("article");
-        const roleLabel = document.createElement("p");
-        const messageContent = document.createElement("div");
-        message.className = `chat__message chat__message--${role}`;
-        roleLabel.className = "chat__message-role";
-        roleLabel.textContent = role;
-        messageContent.className = "chat__message-content markdown-content";
-        messageContent.textContent = content;
-        message.append(roleLabel, messageContent);
-        history.append(message);
-        return messageContent;
-    };
-    const renderMarkdown = async (messageContent, markdown) => {
-        const markdownUrl = form.dataset.markdownUrl;
-        if (markdownUrl === undefined) {
-            return;
-        }
-        const requestBody = new FormData();
-        const antiForgeryToken = form.querySelector("input[name=__RequestVerificationToken]");
-        requestBody.append("markdown", markdown);
-        if (antiForgeryToken !== null) {
-            requestBody.append(antiForgeryToken.name, antiForgeryToken.value);
-        }
-        try {
-            const response = await fetch(markdownUrl, {
-                method: "POST",
-                body: requestBody,
-                headers: {
-                    Accept: "text/html"
-                }
-            });
-            if (!response.ok) {
-                return;
-            }
-            messageContent.innerHTML = await response.text();
-            messageContent.classList.add("markdown-content--rendered");
-            highlightCodeBlocks(messageContent);
-        }
-        catch {
-        }
-    };
-    const updateConversationLocation = (id) => {
-        if (id === null || id.length === 0) {
-            return;
-        }
-        conversationId.value = id;
-        const url = new URL(window.location.href);
-        url.searchParams.set("conversationId", id);
-        window.history.replaceState({}, "", url);
-    };
-    form.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        if (!form.checkValidity()) {
-            return;
-        }
-        if (submitButton.disabled) {
-            event.preventDefault();
-            return;
-        }
-        clearError();
-        form.setAttribute("aria-busy", "true");
-        submitButton.disabled = true;
-        submitButton.classList.add("chat__submit--loading");
-        submitStatus.hidden = false;
-        responsePanel.hidden = false;
-        const promptContent = prompt.value;
-        const userMessageContent = appendMessage("user", promptContent);
-        const responseContent = appendMessage("assistant", "");
-        const requestBody = new FormData(form);
-        prompt.value = "";
-        void renderMarkdown(userMessageContent, promptContent);
-        try {
-            const response = await fetch(form.dataset.streamUrl ?? form.action, {
-                method: "POST",
-                body: requestBody,
-                headers: {
-                    Accept: "text/plain"
-                }
-            });
-            updateConversationLocation(response.headers.get("X-Conversation-Id"));
-            if (!response.ok) {
-                const message = await response.text();
-                throw new Error(message || "Unable to complete the request.");
-            }
-            const reader = response.body?.getReader();
-            if (reader === undefined) {
-                throw new Error("The browser could not read the streamed response.");
-            }
-            const decoder = new TextDecoder();
-            let hasReceivedContent = false;
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) {
-                    break;
-                }
-                const chunk = decoder.decode(value, { stream: true });
-                responseContent.textContent += chunk;
-                if (!hasReceivedContent && chunk.length > 0) {
-                    hasReceivedContent = true;
-                    markResponseStarted();
-                }
-            }
-            const finalChunk = decoder.decode();
-            responseContent.textContent += finalChunk;
-            if (!hasReceivedContent && finalChunk.length > 0) {
-                markResponseStarted();
-            }
-            await renderMarkdown(responseContent, responseContent.textContent ?? "");
-        }
-        catch (error) {
-            if (responseContent.textContent?.trim().length === 0) {
-                responseContent.parentElement?.parentElement?.remove();
-            }
-            showError(error instanceof Error ? error.message : "Unable to complete the request.");
-        }
-        finally {
-            resetRequestState();
-        }
-    });
-    window.addEventListener("pageshow", resetRequestState);
 }
 function highlightCodeBlocks(container) {
     if (window.hljs === undefined) {

@@ -11,4 +11,6 @@ public interface IConversationManager
     Task AddMessageAsync(Conversation conversation, string role, string content, CancellationToken cancellationToken);
 
     Task<IReadOnlyList<ConversationMessage>> GetMessagesAsync(int? conversationId, CancellationToken cancellationToken);
+
+    Task DeleteConversationAsync(int conversationId, CancellationToken cancellationToken);
 }

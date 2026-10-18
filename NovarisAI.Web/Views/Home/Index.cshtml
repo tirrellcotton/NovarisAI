@@ -8,11 +8,19 @@
 <section class="chat-shell">
     <div class="chat-shell__workspace">
         <section class="chat__panel" aria-labelledby="prompt-heading">
-            <div class="chat__panel-header">
+            <div class="chat__panel-header chat__panel-header--prompt">
                 <div>
                     <h2 id="prompt-heading" class="chat__panel-title">Ask Novaris AI</h2>
                 </div>
-                <p class="chat__panel-copy">Choose the model and assistant mode for this request.</p>
+                <div class="theme-toggle" role="group" aria-label="Color theme">
+                    @foreach (var theme in ThemeOptions.All)
+                    {
+                        var themeLabel = char.ToUpperInvariant(theme[0]) + theme[1..];
+                        <button type="button" class="theme-toggle__button" data-theme-option="@theme" aria-pressed="false">
+                            @themeLabel
+                        </button>
+                    }
+                </div>
             </div>
 
             <form asp-action="Index"
@@ -46,19 +54,22 @@
                     <div class="chat__field">
                         <label asp-for="PromptPreset" class="chat__label"></label>
                         <select asp-for="PromptPreset" class="chat__select" data-chat-preset>
-                            @foreach (var preset in Enum.GetValues<NovarisAI.Core.Models.PromptPreset>())
+                            @foreach (var preset in PromptPresetOptions.All)
                             {
                                 var label = preset switch
                                 {
-                                    NovarisAI.Core.Models.PromptPreset.CSharpDeveloper => "C# Developer",
-                                    NovarisAI.Core.Models.PromptPreset.PythonDeveloper => "Python Developer",
-                                    NovarisAI.Core.Models.PromptPreset.CodeReview => "Code Review",
-                                    NovarisAI.Core.Models.PromptPreset.UnitTests => "Unit Tests",
-                                    NovarisAI.Core.Models.PromptPreset.Frontend => "Front End Developer",
-                                    NovarisAI.Core.Models.PromptPreset.SoftwareArchitecture => "Software Architecture",
-                                    NovarisAI.Core.Models.PromptPreset.Math => "Math (Phi-4)",
-                                    NovarisAI.Core.Models.PromptPreset.AnalyticalReasoning => "Analytical Reasoning (Phi-4)",
-                                    NovarisAI.Core.Models.PromptPreset.TechnicalProblemSolving => "Technical Problem Solving (Phi-4)",
+                                    NovarisAI.Core.Models.PromptPreset.General => "💬 General",
+                                    NovarisAI.Core.Models.PromptPreset.CSharpDeveloper => "💻 .NET Developer",
+                                    NovarisAI.Core.Models.PromptPreset.Frontend => "🎨 Front End Developer",
+                                    NovarisAI.Core.Models.PromptPreset.PythonDeveloper => "🐍 Python Developer",
+                                    NovarisAI.Core.Models.PromptPreset.CodeReview => "🔍 Code Review",
+                                    NovarisAI.Core.Models.PromptPreset.UnitTests => "🧪 Unit Tests",
+                                    NovarisAI.Core.Models.PromptPreset.SoftwareArchitecture => "🏗️ Software Architecture",
+                                    NovarisAI.Core.Models.PromptPreset.SQL => "🗄️ Databases",
+                                    NovarisAI.Core.Models.PromptPreset.Documentation => "📝 Documentation",
+                                    NovarisAI.Core.Models.PromptPreset.Math => "🧮 Math (Phi-4)",
+                                    NovarisAI.Core.Models.PromptPreset.AnalyticalReasoning => "🧠 Analytical Reasoning (Phi-4)",
+                                    NovarisAI.Core.Models.PromptPreset.TechnicalProblemSolving => "🛠️ Technical Problem Solving (Phi-4)",
                                     _ => preset.ToString()
                                 };
 
@@ -76,28 +87,41 @@
                     <textarea asp-for="Prompt"
                               class="chat__textarea"
                               rows="8"
+                              aria-describedby="prompt-keyboard-hint"
                               placeholder="Ask a coding, math, analysis, architecture, documentation, or technical problem-solving question...">
                     </textarea>
+
+                    <div class="chat__prompt-options" data-chat-prompt-options hidden>
+                        <label class="chat__enter-preference">
+                            <input type="checkbox" data-chat-enter-to-send />
+                            Enter to send
+                        </label>
+                        <p id="prompt-keyboard-hint" data-chat-keyboard-hint></p>
+                    </div>
 
                     <span asp-validation-for="Prompt"
                           class="chat__validation chat__validation--field">
                     </span>
                 </div>
 
-                <button type="submit" class="chat__submit" data-chat-submit>
-                    <span class="chat__submit-label">Ask Novaris AI</span>
-                    <span class="chat__submit-status" aria-live="polite" hidden>
-                        <span class="chat__spinner" aria-hidden="true"></span>
-                        Sending request
-                    </span>
-                </button>
+                <div class="chat__actions">
+                    <button type="submit" class="chat__submit" data-chat-submit>
+                        <span class="chat__submit-label">Ask Novaris AI</span>
+                        <span class="chat__submit-status" aria-live="polite" hidden>
+                            <span class="chat__spinner" aria-hidden="true"></span>
+                            Sending request
+                        </span>
+                    </button>
+                    <button type="button" class="chat__submit chat__stop" data-chat-stop hidden>Stop request</button>
+                </div>
+                <p class="chat__request-status" role="status" data-chat-request-status></p>
 
                 <aside class="chat__model-guide" aria-labelledby="model-guide-heading">
                     <h3 id="model-guide-heading" class="chat__model-guide-title">Model guide</h3>
                     <ul class="chat__model-guide-list">
+                        <li><strong>Gemma 3 12B:</strong> General-purpose assistant for explanations, drafting, summaries, and broad questions.</li>
                         <li><strong>Qwen Coder 7B:</strong> Fast, lightweight coding help for quick snippets and straightforward programming tasks.</li>
                         <li><strong>Qwen Coder 14B:</strong> Primary coding model for involved implementation, debugging, and code reasoning.</li>
-                        <li><strong>Gemma 3 12B:</strong> General-purpose assistant for explanations, drafting, summaries, and broad questions.</li>
                         <li><strong>Phi-4:</strong> Technical reasoning for analytical, math, logic, and technical problem-solving tasks.</li>
                     </ul>
                 </aside>
@@ -112,6 +136,11 @@
                 <div>
                     <h2 id="response-heading" class="chat__panel-title">Conversation history</h2>
                 </div>
+                <form asp-action="ClearHistory" asp-controller="Home" method="post"
+                      class="chat__clear-history-form" data-chat-clear-form>
+                    <input type="hidden" name="conversationId" value="@Model.ConversationId" />
+                    <button type="submit" class="chat__submit" data-chat-clear>Clear History</button>
+                </form>
             </div>
 
             <div class="chat__history" data-chat-history>

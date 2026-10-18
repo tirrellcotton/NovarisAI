@@ -11,11 +11,11 @@ public class ChatViewModel
 
     [Required]
     [Display(Name = "Model")]
-    public string SelectedModel { get; set; } = "qwen2.5-coder:14b";
+    public string SelectedModel { get; set; } = "gemma3:12b";
 
     [Display(Name = "Assistant mode")]
     public NovarisAI.Core.Models.PromptPreset PromptPreset { get; set; } =
-        NovarisAI.Core.Models.PromptPreset.CSharpDeveloper;
+        NovarisAI.Core.Models.PromptPreset.General;
 
     [Required]
     [Display(Name="Ask Novaris AI")]

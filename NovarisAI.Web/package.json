@@ -1,9 +1,11 @@
 {
   "name": "novarisai-web",
   "private": true,
+  "type": "module",
   "scripts": {
     "build:client": "tsc --project tsconfig.json",
-    "typecheck": "tsc --project tsconfig.json --noEmit"
+    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "test:client": "npm run build:client && node --test tests/*.test.mjs"
   },
   "devDependencies": {
     "typescript": "^7.0.2"

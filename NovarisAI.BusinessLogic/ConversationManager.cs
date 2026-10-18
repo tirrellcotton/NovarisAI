@@ -25,6 +25,16 @@ public class ConversationManager(NovarisDbContext novarisDbContext) : IConversat
     }
 
     /// <summary>
+    /// Deletes a conversation and its messages. Other conversations are left intact.
+    /// </summary>
+    public Task DeleteConversationAsync(int conversationId, CancellationToken cancellationToken)
+    {
+        return novarisDbContext.Conversations
+            .Where(conversation => conversation.Id == conversationId)
+            .ExecuteDeleteAsync(cancellationToken);
+    }
+
+    /// <summary>
     /// Creates a new conversation.
     /// </summary>
     /// <returns>The newly created conversation.</returns>
